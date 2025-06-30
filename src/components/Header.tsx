@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, Phone, Mail, MapPin, ChevronDown, CreditCard } from 'lucide-react';
-import logo from '../assets/logo.png';
+// Using logo from public directory for both Header and favicon
+const logo = '/assets/logo.png';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
