@@ -10,6 +10,7 @@ import Australia from './pages/Australia';
 import UK from './pages/UK';
 import Europe from './pages/Europe';
 import USA from './pages/USA';
+import Payment from './pages/Payment';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/uk" element={<UK />} />
             <Route path="/europe" element={<Europe />} />
             <Route path="/usa" element={<USA />} />
+            <Route path="/payment" element={<Payment />} />
           </Routes>
         </main>
         <Footer />

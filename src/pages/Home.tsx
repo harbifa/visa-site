@@ -239,13 +239,13 @@ const Home = () => {
                   Each and every consultant hired at our company has been through our <strong>6 months aggressive internal training program</strong> that consists of eight different courses.
                 </p>
                 <p className="text-lg text-blue-600 font-semibold">
-                  Serving in the GCC since 2016
+                  Serving in the GCC since 2018
                 </p>
               </div>
               
               <div className="grid grid-cols-2 gap-6 mt-8">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">1000+</div>
+                  <div className="text-3xl font-bold text-blue-600">30000+</div>
                   <div className="text-gray-600">Successful Cases</div>
                 </div>
                 <div className="text-center">

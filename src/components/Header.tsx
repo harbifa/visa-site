@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, Phone, Mail, MapPin, ChevronDown, CreditCard } from 'lucide-react';
+import logo from '../assets/logo.png';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const countries = [
     {
@@ -35,8 +37,7 @@ const Header = () => {
   ];
 
   const handlePayment = () => {
-    // Placeholder for Moyasar payment integration
-    alert('Payment integration with Moyasar will be implemented here');
+    navigate('/payment');
   };
 
   return (
@@ -44,23 +45,29 @@ const Header = () => {
       {/* Top Contact Bar */}
       <div className="bg-blue-900 text-white py-2 px-4">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center text-sm">
-          <div className="flex items-center space-x-6">
+          <div className="flex flex-wrap items-center gap-4">
+            {/* Location - always visible */}
             <div className="flex items-center space-x-2">
               <MapPin size={16} />
-              <span>Shwamek, Saudi Arabia</span>
+              <span className="whitespace-nowrap">Shwamek, Saudi Arabia</span>
             </div>
-            <div className="flex items-center space-x-2">
-              <Mail size={16} />
-              <span>info@shawamek.sa</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Phone size={16} />
-              <span>+966501367513</span>
+            
+            {/* Contact info - responsive layout */}
+            <div className="flex flex-col items-end sm:flex-row sm:items-center sm:space-x-6 space-y-1 sm:space-y-0">
+              <div className="flex items-center space-x-2">
+                <Phone size={16} />
+                <span className="whitespace-nowrap">+966501367513</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Mail size={16} />
+                <span className="whitespace-nowrap">info@shawmekimmigration.com</span>
+              </div>
             </div>
           </div>
+          
           <button
             onClick={handlePayment}
-            className="bg-green-600 hover:bg-green-700 px-4 py-1 rounded-md flex items-center space-x-2 transition-colors"
+            className="bg-green-600 hover:bg-green-700 px-4 py-1 rounded-md flex items-center space-x-2 transition-colors mt-2 sm:mt-0"
           >
             <CreditCard size={16} />
             <span>Pay Online</span>
@@ -71,8 +78,15 @@ const Header = () => {
       {/* Main Navigation */}
       <nav className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-blue-900">
-            Immigration Services
+          <Link to="/" className="flex items-center space-x-3">
+            <img 
+              src={logo} 
+              alt="Shawamek Visa Immigration Logo" 
+              className="h-12 w-auto"
+            />
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold text-blue-900">Shawamek Visa Immigration</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
