@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, Award, Globe, CheckCircle, ArrowRight, Star, Calendar } from 'lucide-react';
+import emailjs from '@emailjs/browser';
+import { emailConfig } from '../config/emailjs';
 
 const Home = () => {
   const [formData, setFormData] = useState({
@@ -12,17 +14,129 @@ const Home = () => {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Initialize EmailJS on component mount
+  useEffect(() => {
+    console.log('🚀 Initializing EmailJS with public key:', emailConfig.publicKey.substring(0, 5) + '...');
+    emailjs.init(emailConfig.publicKey);
+    console.log('✅ EmailJS initialized successfully');
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Thank you! Our immigration experts will contact you soon.');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      country: '',
-      visaType: '',
-      message: ''
-    });
+    
+    // Prevent multiple submissions
+    if (isSubmitting) {
+      console.log('Form already submitting, ignoring...');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    console.log('=== Starting email submission ===');
+
+    try {
+      // Check configuration
+      if (!emailConfig.serviceId || !emailConfig.templateId || !emailConfig.publicKey) {
+        throw new Error('EmailJS configuration is incomplete');
+      }
+
+      console.log('Configuration check passed');
+
+      // Prepare data for sending
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        phone: formData.phone,
+        country: formData.country,
+        visa_type: formData.visaType,
+        message: formData.message,
+        to_email: 'info@shawmekimmigration.com',
+        date: new Date().toLocaleDateString('en-US'),
+        time: new Date().toLocaleTimeString('en-US')
+      };
+
+      console.log('Sending email with params:', JSON.stringify(templateParams, null, 2));
+      console.log('Using EmailJS config:', JSON.stringify({
+        serviceId: emailConfig.serviceId,
+        templateId: emailConfig.templateId,
+        publicKeyLength: emailConfig.publicKey.length,
+        publicKeyPreview: emailConfig.publicKey.substring(0, 5) + '...'
+      }, null, 2));
+
+      // Send email using EmailJS with timeout
+      console.log('📤 Attempting to send email...');
+      console.log('🔄 Calling emailjs.send()...');
+      
+      // التحقق من صحة التكوين مرة أخرى
+      console.log('🔍 Verifying EmailJS configuration...');
+      console.log('Service ID:', emailConfig.serviceId);
+      console.log('Template ID:', emailConfig.templateId);
+      console.log('Public Key:', emailConfig.publicKey);
+
+             // محاولة إرسال مباشرة بدون timeout معقد
+       console.log('📤 Attempting direct EmailJS send...');
+       
+       const response = await emailjs.send(
+         emailConfig.serviceId,
+         emailConfig.templateId,
+         templateParams,
+         emailConfig.publicKey
+       );
+
+      console.log('✅ Email sent successfully:', JSON.stringify(response, null, 2));
+
+      setSubmitStatus('success');
+      // Reset form on success
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        country: '',
+        visaType: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('❌ Error sending email:', error);
+      console.error('Error message:', error instanceof Error ? error.message : 'Unknown error');
+      
+      // تحليل نوع الخطأ وإعطاء نصائح مفيدة
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      
+      if (errorMessage.includes('404')) {
+        console.error('🔍 404 Error - This usually means:');
+        console.error('   - Service ID is incorrect');
+        console.error('   - Template ID is incorrect');
+        console.error('   - Service or template was deleted from EmailJS dashboard');
+      } else if (errorMessage.includes('401') || errorMessage.includes('403')) {
+        console.error('🔑 Authorization Error - This usually means:');
+        console.error('   - Public Key is incorrect');
+        console.error('   - Service is not properly configured');
+        console.error('   - Account permissions issue');
+      } else if (errorMessage.includes('400')) {
+        console.error('📝 Bad Request - This usually means:');
+        console.error('   - Template variables don\'t match');
+        console.error('   - Invalid data in the request');
+      } else {
+        console.error('🌐 Network/Other Error - This could be:');
+        console.error('   - Internet connectivity issue');
+        console.error('   - EmailJS servers are down');
+        console.error('   - CORS policy issue');
+      }
+      
+      console.error('💡 Recommended actions:');
+      console.error('   1. Verify all IDs in EmailJS dashboard');
+      console.error('   2. Check service is active and connected');
+      console.error('   3. Test template with sample data in EmailJS');
+      console.error('   4. Ensure template variables match the data being sent');
+      
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+      console.log('=== Email submission completed ===');
+    }
   };
 
   const countries = [
@@ -129,6 +243,31 @@ const Home = () => {
               <h3 className="text-2xl font-bold mb-6 text-center text-blue-900">
                 Fill Free Assessment Form
               </h3>
+              
+              {/* Status Messages */}
+              {submitStatus === 'success' && (
+                <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg text-center">
+                  <p className="font-semibold">✅ Your request has been sent successfully!</p>
+                  <p className="text-sm mt-1">Our immigration experts will contact you as soon as possible.</p>
+                </div>
+              )}
+              
+              {submitStatus === 'error' && (
+                <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center">
+                  <p className="font-semibold">❌ Error sending your request</p>
+                  <p className="text-sm mt-1">Please try again or contact us directly at info@shawmekimmigration.com</p>
+                </div>
+              )}
+
+
+              
+              {isSubmitting && (
+                <div className="mb-4 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded-lg text-center">
+                  <p className="font-semibold">📤 Sending your request...</p>
+                  <p className="text-sm mt-1">Please wait, do not refresh the page.</p>
+                </div>
+              )}
+              
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <input
@@ -201,9 +340,21 @@ const Home = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+                  disabled={isSubmitting}
+                  className={`w-full font-bold py-3 px-6 rounded-lg transition-colors ${
+                    isSubmitting 
+                      ? 'bg-gray-400 cursor-not-allowed' 
+                      : 'bg-blue-600 hover:bg-blue-700'
+                  } text-white`}
                 >
-                  Submit Assessment
+                  {isSubmitting ? (
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <span>Sending...</span>
+                    </div>
+                  ) : (
+                    'Submit Assessment'
+                  )}
                 </button>
               </form>
             </div>
