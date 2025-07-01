@@ -11,6 +11,11 @@ import UK from './pages/UK';
 import Europe from './pages/Europe';
 import USA from './pages/USA';
 import Payment from './pages/Payment';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import Disclaimer from './pages/Disclaimer';
+import CookiePolicy from './pages/CookiePolicy';
+import RefundPolicy from './pages/RefundPolicy';
 
 function App() {
   return (
@@ -28,6 +33,11 @@ function App() {
             <Route path="/europe" element={<Europe />} />
             <Route path="/usa" element={<USA />} />
             <Route path="/payment" element={<Payment />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/disclaimer" element={<Disclaimer />} />
+            <Route path="/cookie-policy" element={<CookiePolicy />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
           </Routes>
         </main>
         <Footer />

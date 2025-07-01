@@ -9,12 +9,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Immigration Services</h3>
+            <h3 className="text-xl font-bold mb-4">Shawamek Visa Immigration</h3>
             <p className="text-gray-300 mb-4">
               Since 2016, we are experts in Immigration Services. Serving in the GCC with certified & reliable Immigration Consultant professionals.
             </p>
             <div className="text-sm text-gray-400">
-              <p>License No: 765058</p>
+              <p>ICCRC Registered Associates</p>
             </div>
           </div>
 
@@ -38,9 +38,9 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                  Privacy Policy
-                </a>
+                <Link to="/payment" className="text-gray-300 hover:text-white transition-colors">
+                  Pay Online
+                </Link>
               </li>
             </ul>
           </div>
@@ -91,14 +91,34 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail size={20} className="text-blue-400 flex-shrink-0" />
-                <span className="text-gray-300">info@shawamek.sa</span>
+                <span className="text-gray-300">info@shawmekimmigration.com</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>Copyright ©2016-2024. All Rights Reserved by Immigration Services.</p>
+        {/* Legal Links */}
+        <div className="border-t border-gray-800 mt-8 pt-6">
+          <div className="flex flex-wrap justify-center gap-6 mb-4">
+            <Link to="/privacy-policy" className="text-gray-400 hover:text-white transition-colors text-sm">
+              Privacy Policy
+            </Link>
+            <Link to="/terms-of-service" className="text-gray-400 hover:text-white transition-colors text-sm">
+              Terms of Service
+            </Link>
+            <Link to="/disclaimer" className="text-gray-400 hover:text-white transition-colors text-sm">
+              Disclaimer
+            </Link>
+            <Link to="/cookie-policy" className="text-gray-400 hover:text-white transition-colors text-sm">
+              Cookie Policy
+            </Link>
+            <Link to="/refund-policy" className="text-gray-400 hover:text-white transition-colors text-sm">
+              Refund Policy
+            </Link>
+          </div>
+          <div className="text-center text-gray-400">
+            <p>Copyright ©2016-2024. All Rights Reserved by Shawamek Visa Immigration.</p>
+          </div>
         </div>
       </div>
     </footer>

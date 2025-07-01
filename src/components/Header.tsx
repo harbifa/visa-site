@@ -57,7 +57,7 @@ const Header = () => {
             <div className="flex flex-col items-end sm:flex-row sm:items-center sm:space-x-6 space-y-1 sm:space-y-0">
               <div className="flex items-center space-x-2">
                 <Phone size={16} />
-                <span className="whitespace-nowrap">+966503545385</span>
+                <span className="whitespace-nowrap">+966501367513</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail size={16} />
