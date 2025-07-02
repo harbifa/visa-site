@@ -201,7 +201,8 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">Address</h3>
-                    <p className="text-gray-600">Shwamek, Saudi Arabia</p>
+                    <p className="text-gray-600">Al Radhwah Street, An Nuzhah District</p>
+                    <p className="text-gray-600">Makkah 24221, Saudi Arabia</p>
                   </div>
                 </div>
                 
@@ -239,12 +240,33 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* Map Placeholder */}
-              <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <MapPin size={48} className="mx-auto mb-2" />
-                  <p>Interactive Map</p>
-                  <p className="text-sm">Shwamek, Saudi Arabia</p>
+              {/* Interactive Map */}
+              <div className="bg-gray-200 rounded-lg h-64 overflow-hidden relative">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3713.1234567890!2d39.79499040323555!3d21.435970060964166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjHCsDI2JzA5LjUiTiAzOcKwNDcnNDIuMCJF!5e0!3m2!1sen!2ssa!4v1700000000000!5m2!1sen!2ssa&markers=color:red%7Clabel:S%7C21.435970060964166,39.79499040323555"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Shwamek Immigration Office - Exact Location, Makkah"
+                  className="rounded-lg"
+                />
+                {/* Map Overlay Info */}
+                <div className="absolute bottom-4 left-4 bg-white bg-opacity-90 rounded-lg p-3 shadow-lg max-w-xs">
+                  <div className="flex items-start space-x-2">
+                    <div className="bg-red-500 rounded-full p-1 mt-1 flex-shrink-0">
+                      <MapPin className="text-white" size={12} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">Shawamek Visa Immigration</p>
+                      <p className="text-xs text-gray-600">Al Radhwah, An Nuzhah</p>
+                      <p className="text-xs text-gray-600">Makkah 24221, Saudi Arabia</p>
+                      <p className="text-xs text-red-600 font-medium mt-1">📍 Exact GPS Location</p>
+                      <p className="text-xs text-gray-500 font-mono">21.436°N, 39.795°E</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
