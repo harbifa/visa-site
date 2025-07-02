@@ -5,8 +5,9 @@ export const emailConfig = {
   // Service ID - يمكنك الحصول عليه من https://dashboard.emailjs.com/admin
   serviceId: 'service_z43scyh', // Service ID الجديد للحساب shawamek.contact@gmail.com
   
-  // Template ID - يمكنك إنشاؤه من https://dashboard.emailjs.com/admin/templates
-  templateId: 'template_up4vfe6', // استبدل بـ Template ID الخاص بك
+  // Template IDs - يمكنك إنشاؤها من https://dashboard.emailjs.com/admin/templates
+  assessmentTemplateId: 'template_up4vfe6', // قالب طلبات التقييم والخدمات (الأصلي)
+  contactTemplateId: 'template_tjq0bm4', // قالب التواصل العام ✅
   
   // Public Key - يمكنك الحصول عليه من https://dashboard.emailjs.com/admin/account
   publicKey: 'bKCF_TxAUQ6cR0Q_t' // استبدل بـ Public Key الخاص بك
@@ -21,11 +22,16 @@ export const emailConfig = {
 - المستقبل: info@shawmekimmigration.com  
 - Cloudflare يوجه إلى: shawamek.immigration@gmail.com
 
+📋 القوالب (Templates):
+1️⃣ Assessment Template (template_up4vfe6): لطلبات التقييم وخدمات الهجرة
+2️⃣ Contact Template (template_tjq0bm4): للتواصل العام والاستفسارات ✅
+
 🌟 مميزات هذا الإعداد:
 - احترافي ويتماشى مع هوية الشركة
 - واضح أنه خاص بنماذج الاتصال
 - لا يسبب التباس مع الحسابات الأخرى
 - حل مشكلة إلغاء تكرار Gmail نهائياً
+- تفريق بين أنواع الرسائل المختلفة
 
 🧪 جاهز للاختبار!
 النظام الآن جاهز للعمل بشكل كامل.
@@ -66,8 +72,8 @@ export const emailConfig = {
 
 1. قم بإنشاء حساب مجاني على https://www.emailjs.com/
 2. أضف خدمة البريد الإلكتروني (Gmail - shawamek.contact@gmail.com)
-3. أنشئ قالب بريد إلكتروني بالمحتوى التالي:
 
+3. أنشئ القالب الأول (Assessment Template - template_up4vfe6):
 Subject: New Assessment Request from {{from_name}} - Shawamek Immigration
 
 Hello Shawamek Immigration Team,
@@ -93,7 +99,32 @@ Please contact the client as soon as possible.
 
 Automatically sent from Shawamek Immigration electronic system.
 
-4. احصل على Service ID و Template ID و Public Key
-5. حدث القيم في هذا الملف
-6. تأكد من تحديث استيراد هذا الملف في Home.tsx
+4. أنشئ القالب الثاني (Contact Template - template_contact_msg):
+Subject: General Inquiry from {{from_name}} - Shawamek Immigration
+
+Hello Shawamek Immigration Team,
+
+A new general inquiry has been received from the Contact Us page:
+
+👤 Contact Information:
+─────────────────────────────
+Full Name: {{from_name}}
+Email Address: {{from_email}}
+Phone Number: {{phone}}
+Subject: {{inquiry_subject}}
+
+💬 Message:
+{{message}}
+
+📅 Inquiry Date and Time:
+{{date}} at {{time}}
+
+─────────────────────────────
+This is a general inquiry/question/complaint. Please respond accordingly.
+
+Automatically sent from Shawamek Immigration Contact Form.
+
+5. احصل على Service ID و Template IDs و Public Key
+6. حدث القيم في هذا الملف
+7. تأكد من تحديث استيراد هذا الملف في الصفحات المناسبة
 */ 

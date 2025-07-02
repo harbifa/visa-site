@@ -11,6 +11,8 @@ import UK from './pages/UK';
 import Europe from './pages/Europe';
 import USA from './pages/USA';
 import Payment from './pages/Payment';
+import PaymentDemo from './pages/PaymentDemo';
+import PaymentCallback from './pages/PaymentCallback';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import Disclaimer from './pages/Disclaimer';
@@ -33,6 +35,8 @@ function App() {
             <Route path="/europe" element={<Europe />} />
             <Route path="/usa" element={<USA />} />
             <Route path="/payment" element={<Payment />} />
+            <Route path="/payment/demo" element={<PaymentDemo />} />
+            <Route path="/payment/callback" element={<PaymentCallback />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/disclaimer" element={<Disclaimer />} />

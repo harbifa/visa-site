@@ -39,7 +39,7 @@ const Home = () => {
 
     try {
       // Check configuration
-      if (!emailConfig.serviceId || !emailConfig.templateId || !emailConfig.publicKey) {
+      if (!emailConfig.serviceId || !emailConfig.assessmentTemplateId || !emailConfig.publicKey) {
         throw new Error('EmailJS configuration is incomplete');
       }
 
@@ -61,7 +61,7 @@ const Home = () => {
       console.log('Sending email with params:', JSON.stringify(templateParams, null, 2));
       console.log('Using EmailJS config:', JSON.stringify({
         serviceId: emailConfig.serviceId,
-        templateId: emailConfig.templateId,
+        templateId: emailConfig.assessmentTemplateId,
         publicKeyLength: emailConfig.publicKey.length,
         publicKeyPreview: emailConfig.publicKey.substring(0, 5) + '...'
       }, null, 2));
@@ -73,7 +73,7 @@ const Home = () => {
       // التحقق من صحة التكوين مرة أخرى
       console.log('🔍 Verifying EmailJS configuration...');
       console.log('Service ID:', emailConfig.serviceId);
-      console.log('Template ID:', emailConfig.templateId);
+      console.log('Template ID:', emailConfig.assessmentTemplateId);
       console.log('Public Key:', emailConfig.publicKey);
 
              // محاولة إرسال مباشرة بدون timeout معقد
@@ -81,7 +81,7 @@ const Home = () => {
        
        const response = await emailjs.send(
          emailConfig.serviceId,
-         emailConfig.templateId,
+         emailConfig.assessmentTemplateId,
          templateParams,
          emailConfig.publicKey
        );

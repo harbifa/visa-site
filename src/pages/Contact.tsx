@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react';
+import emailjs from '@emailjs/browser';
+import { emailConfig } from '../config/emailjs';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -10,16 +12,53 @@ const Contact = () => {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [lastSubmittedEmail, setLastSubmittedEmail] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Thank you for your message! We will get back to you soon.');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
-    });
+    setIsLoading(true);
+    setSubmitStatus('idle');
+
+    try {
+      // حفظ الإيميل قبل مسح النموذج
+      setLastSubmittedEmail(formData.email);
+
+      // إعداد معاملات الإيميل للتواصل العام
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        phone: formData.phone || 'Not provided',
+        inquiry_subject: formData.subject,
+        message: formData.message,
+        to_email: 'info@shawmekimmigration.com',
+        date: new Date().toLocaleDateString('ar-SA'),
+        time: new Date().toLocaleTimeString('ar-SA')
+      };
+
+      // إرسال الإيميل باستخدام EmailJS - قالب التواصل العام
+      await emailjs.send(
+        emailConfig.serviceId,
+        emailConfig.contactTemplateId,
+        templateParams,
+        emailConfig.publicKey
+      );
+
+      setSubmitStatus('success');
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -116,12 +155,37 @@ const Contact = () => {
                   />
                 </div>
                 
+                {/* Success Message */}
+                {submitStatus === 'success' && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                    <div className="text-green-800">
+                      <h4 className="font-semibold">Message Sent Successfully!</h4>
+                      <p className="text-sm">Thank you for your message. We will get back to you soon at {lastSubmittedEmail}.</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {submitStatus === 'error' && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                    <div className="text-red-800">
+                      <h4 className="font-semibold">Error Sending Message</h4>
+                      <p className="text-sm">There was an error sending your message. Please try again or contact us directly at info@shawmekimmigration.com</p>
+                    </div>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2"
+                  disabled={isLoading}
+                  className={`w-full font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2 ${
+                    isLoading 
+                      ? 'bg-gray-400 cursor-not-allowed' 
+                      : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  }`}
                 >
                   <Send size={20} />
-                  <span>Send Message</span>
+                  <span>{isLoading ? 'Sending...' : 'Send Message'}</span>
                 </button>
               </form>
             </div>
@@ -157,7 +221,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">Email</h3>
-                    <p className="text-gray-600">info@shawamek.sa</p>
+                    <p className="text-gray-600">info@shawmekimmigration.com</p>
                   </div>
                 </div>
                 

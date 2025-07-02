@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CreditCard, Lock, ArrowLeft, CheckCircle, ExternalLink, Shield } from 'lucide-react';
+import { CreditCard, Lock, ArrowLeft, CheckCircle, ExternalLink, Shield, AlertTriangle } from 'lucide-react';
+
+
 
 const Payment = () => {
   const [formData, setFormData] = useState({
@@ -15,18 +17,101 @@ const Payment = () => {
   });
 
   const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
+    setPaymentError(null);
     
-    // Simulate processing before redirecting to Moyasar
-    setTimeout(() => {
+    try {
+      // Validate form data
+      if (!formData.name || !formData.email || !formData.phone || !formData.amount || !formData.serviceType) {
+        setPaymentError('Please fill in all required fields');
+        return;
+      }
+
+      const amount = parseFloat(formData.amount);
+      if (isNaN(amount) || amount <= 0) {
+        setPaymentError('Please enter a valid amount greater than 0');
+        return;
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setPaymentError('Please enter a valid email address');
+        return;
+      }
+
+      console.log('🚀 Creating Moyasar payment...', {
+        customer: formData.name,
+        service: formData.serviceType,
+        amount: `${amount} SAR`,
+      });
+
+      // Check if we're in production mode
+      const isProduction = import.meta.env.VITE_PAYMENT_ENV === 'production';
+      
+      if (isProduction) {
+        // PRODUCTION: Use real Moyasar API
+        try {
+          const response = await fetch('/api/create-payment', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: formData.name,
+              email: formData.email,
+              phone: formData.phone,
+              amount: formData.amount,
+              serviceType: formData.serviceType,
+              description: formData.description,
+            }),
+          });
+
+          const result = await response.json();
+          
+          if (result.success && result.url) {
+            console.log('✅ Payment URL received, redirecting...', result.url);
+            window.location.href = result.url;
+          } else {
+            setPaymentError(result.error?.message || 'Failed to create payment session');
+          }
+        } catch (error) {
+          console.error('❌ Payment creation failed:', error);
+          setPaymentError('Failed to connect to payment service');
+        }
+      } else {
+        // DEMO: Use demo payment page
+        console.log('🧪 Demo mode - redirecting to demo payment...');
+        
+        const paymentData = {
+          customer_name: formData.name,
+          customer_email: formData.email,
+          customer_phone: formData.phone,
+          service_type: formData.serviceType,
+          amount: (amount * 100).toString(),
+          currency: 'SAR',
+          description: `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`
+        };
+
+        localStorage.setItem('demoPaymentData', JSON.stringify(paymentData));
+        
+        setTimeout(() => {
+          const demoUrl = `${window.location.origin}/payment/demo?amount=${amount}&currency=SAR&description=${encodeURIComponent(paymentData.description)}`;
+          window.location.href = demoUrl;
+        }, 1000);
+      }
+
+    } catch (error) {
+      console.error('❌ Payment submission error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      setPaymentError(`Payment failed: ${errorMessage}`);
+    } finally {
       setIsProcessing(false);
-      // Here you would create the payment session with Moyasar and redirect
-      alert('Redirecting to Moyasar for secure payment processing...');
-      // window.location.href = moyasarPaymentUrl;
-    }, 1500);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -238,6 +323,19 @@ const Payment = () => {
                     />
                   </div>
                 </div>
+
+                {/* Error Message */}
+                {paymentError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="flex items-start">
+                      <AlertTriangle className="text-red-600 mr-3 mt-0.5 flex-shrink-0" size={20} />
+                      <div>
+                        <h4 className="text-red-900 font-medium mb-2">Payment Error</h4>
+                        <p className="text-red-800 text-sm">{paymentError}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Moyasar Notice */}
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
