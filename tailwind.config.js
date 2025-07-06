@@ -2,7 +2,13 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'arabic': ['Segoe UI', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif', 'Amiri', 'Noto Sans Arabic', 'Cairo', 'serif'],
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss-rtl'),
+  ],
 };

@@ -1,0 +1,87 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "about_us": "About Us",
+    "services": "Services",
+    "contact": "Contact",
+    "pay_online": "Pay Online"
+  },
+  "company": {
+    "name": "Shawamek Visa Immigration",
+    "description": "Since 2016, we are experts in Immigration Services. Serving in the GCC with certified & reliable Immigration Consultant professionals.",
+    "credentials": "ICCRC Registered Associates",
+    "location": "Shwamek, Saudi Arabia",
+    "phone": "+966501367513",
+    "email": "info@shawmekimmigration.com"
+  },
+  "countries": {
+    "canada": "Canada",
+    "australia": "Australia",
+    "uk": "United Kingdom",
+    "europe": "Europe",
+    "usa": "USA"
+  },
+  "visa_types": {
+    "visit_visas": "Visit Visas",
+    "immigration_visas": "Immigration Visas",
+    "work_permits": "Work Permits",
+    "study_visas": "Study Visas",
+    "spouse_visa": "Spouse Visa",
+    "family_visa": "Family Visa"
+  },
+  "services": {
+    "express_entry": "Express Entry Visa",
+    "provincial_nomination": "Provincial Nomination Program",
+    "atlantic_pilot": "Atlantic Immigration Pilot",
+    "skilled_nominated": "Skilled Nominated Visa",
+    "sole_representative": "Sole Representative Program",
+    "job_seeker": "Job Seeker Visa",
+    "e2_treaty": "E2 Treaty Investor Visa",
+    "eb5_investor": "EB-5 Immigrant Investor",
+    "student_visa": "Student Visa",
+    "visit_visa": "Visit Visa"
+  },
+  "footer": {
+    "useful_links": "Useful Links",
+    "countries_visas": "Countries Visas",
+    "get_in_touch": "Get in Touch",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "disclaimer": "Disclaimer",
+    "cookie_policy": "Cookie Policy",
+    "refund_policy": "Refund Policy",
+    "copyright": "Copyright ©2016-2024. All Rights Reserved by Shawamek Visa Immigration."
+  },
+  "buttons": {
+    "submit": "Submit",
+    "send": "Send",
+    "learn_more": "Learn More",
+    "get_started": "Get Started",
+    "contact_us": "Contact Us",
+    "apply_now": "Apply Now"
+  },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "country": "Country",
+    "visa_type": "Visa Type",
+    "message": "Message",
+    "required": "Required",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "Error sending message. Please try again."
+  },
+  "common": {
+    "more_services": "more services",
+    "rating": "Rating",
+    "testimonials": "Testimonials",
+    "news": "News",
+    "articles": "Articles",
+    "read_more": "Read More",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  }
+} 

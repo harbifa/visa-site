@@ -1,0 +1,87 @@
+{
+  "navigation": {
+    "home": "الرئيسية",
+    "about": "من نحن",
+    "about_us": "من نحن",
+    "services": "الخدمات",
+    "contact": "اتصل بنا",
+    "pay_online": "دفع أونلاين"
+  },
+  "company": {
+    "name": "الشوامخ للهجرة والتأشيرات",
+    "description": "منذ عام 2016، نحن خبراء في خدمات الهجرة. نخدم في دول الخليج مع استشاريين معتمدين وموثوقين في الهجرة.",
+    "credentials": "شركاء مسجلون في ICCRC",
+    "location": "الشوامخ، المملكة العربية السعودية",
+    "phone": "+966501367513",
+    "email": "info@shawmekimmigration.com"
+  },
+  "countries": {
+    "canada": "كندا",
+    "australia": "أستراليا",
+    "uk": "المملكة المتحدة",
+    "europe": "أوروبا",
+    "usa": "الولايات المتحدة"
+  },
+  "visa_types": {
+    "visit_visas": "فيزا الزيارة",
+    "immigration_visas": "فيزا الهجرة",
+    "work_permits": "تصاريح العمل",
+    "study_visas": "فيزا الدراسة",
+    "spouse_visa": "فيزا الزوج/الزوجة",
+    "family_visa": "فيزا العائلة"
+  },
+  "services": {
+    "express_entry": "فيزا الدخول السريع",
+    "provincial_nomination": "برنامج الترشيح الإقليمي",
+    "atlantic_pilot": "برنامج الهجرة الأطلسي",
+    "skilled_nominated": "فيزا المهارات المرشحة",
+    "sole_representative": "برنامج الممثل الوحيد",
+    "job_seeker": "فيزا الباحث عن عمل",
+    "e2_treaty": "فيزا المستثمر E2",
+    "eb5_investor": "فيزا المستثمر EB-5",
+    "student_visa": "فيزا الطالب",
+    "visit_visa": "فيزا الزيارة"
+  },
+  "footer": {
+    "useful_links": "روابط مفيدة",
+    "countries_visas": "فيزا الدول",
+    "get_in_touch": "تواصل معنا",
+    "privacy_policy": "سياسة الخصوصية",
+    "terms_of_service": "شروط الخدمة",
+    "disclaimer": "إخلاء المسؤولية",
+    "cookie_policy": "سياسة ملفات تعريف الارتباط",
+    "refund_policy": "سياسة الاسترداد",
+    "copyright": "حقوق الطبع والنشر ©2016-2024. جميع الحقوق محفوظة لـ الشوامخ للهجرة والتأشيرات."
+  },
+  "buttons": {
+    "submit": "إرسال",
+    "send": "إرسال",
+    "learn_more": "اعرف المزيد",
+    "get_started": "ابدأ الآن",
+    "contact_us": "اتصل بنا",
+    "apply_now": "تقدم الآن"
+  },
+  "form": {
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "country": "البلد",
+    "visa_type": "نوع الفيزا",
+    "message": "الرسالة",
+    "required": "مطلوب",
+    "sending": "جاري الإرسال...",
+    "success": "تم إرسال الرسالة بنجاح!",
+    "error": "خطأ في إرسال الرسالة. يرجى المحاولة مرة أخرى."
+  },
+  "common": {
+    "more_services": "خدمات أخرى",
+    "rating": "التقييم",
+    "testimonials": "آراء العملاء",
+    "news": "الأخبار",
+    "articles": "المقالات",
+    "read_more": "اقرأ المزيد",
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجح"
+  }
+} 
