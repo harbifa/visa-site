@@ -1,9 +1,15 @@
 import React from 'react';
 import { CheckCircle, Clock, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const Canada = () => {
   const { t } = useTranslation(['common', 'pages']);
+  const navigate = useNavigate();
+
+  const handleNavigateToContact = () => {
+    navigate('/contact');
+  };
 
   return (
     <div>
@@ -16,7 +22,10 @@ const Canada = () => {
               <p className="text-xl lg:text-2xl text-red-100 mb-8">
                 {t('pages:canada.hero.subtitle')}
               </p>
-              <button className="bg-white text-red-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition-colors">
+              <button 
+                className="bg-white text-red-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition-colors"
+                onClick={handleNavigateToContact}
+              >
                 {t('pages:canada.hero.cta')}
               </button>
             </div>
@@ -268,10 +277,16 @@ const Canada = () => {
             {t('pages:canada.cta.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-red-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition-colors">
+            <button 
+              className="bg-white text-red-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition-colors"
+              onClick={handleNavigateToContact}
+            >
               {t('pages:canada.cta.primary_btn')}
             </button>
-            <button className="border-2 border-white text-white hover:bg-white hover:text-red-600 font-bold py-3 px-8 rounded-lg transition-colors">
+            <button 
+              className="border-2 border-white text-white hover:bg-white hover:text-red-600 font-bold py-3 px-8 rounded-lg transition-colors"
+              onClick={handleNavigateToContact}
+            >
               {t('pages:canada.cta.secondary_btn')}
             </button>
           </div>
