@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award, Users, Globe, CheckCircle, Clock, Star } from 'lucide-react';
+import { Award, Users, Globe, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../hooks/useLanguage';
 
 const About = () => {
@@ -24,7 +24,6 @@ const About = () => {
       services_subtitle: "Comprehensive immigration and document clearing services",
       team_title: "Our Expert Team",
       team_subtitle: "Certified professionals dedicated to your immigration success",
-      team_experience: "experience",
       why_title: "Why Choose Us?",
       why_iccrc_title: "ICCRC Registered",
       why_iccrc_desc: "All our services are provided by ICCRC registered associates ensuring compliance and reliability.",
@@ -51,7 +50,6 @@ const About = () => {
       services_subtitle: "خدمات شاملة للهجرة وتخليص الوثائق",
       team_title: "فريقنا الخبير",
       team_subtitle: "مهنيون معتمدون مخصصون لنجاح هجرتك",
-      team_experience: "خبرة",
       why_title: "لماذا تختارنا؟",
       why_iccrc_title: "مسجل في ICCRC",
       why_iccrc_desc: "جميع خدماتنا مقدمة من قبل شركاء مسجلين في ICCRC لضمان الامتثال والموثوقية.",
@@ -82,27 +80,27 @@ const About = () => {
     'Immigration Appeals and Reviews'
   ];
 
-  const team = [
+  const teamFeatures = [
     {
-      name: 'Sarah Johnson',
-      role: 'Senior Immigration Consultant',
-      experience: '12',
-      specialization: 'Canadian Immigration',
-      image: 'https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=400'
+      icon: Award,
+      title: currentLanguage === 'ar' ? 'مستشارون معتمدون' : 'Certified Consultants',
+      description: currentLanguage === 'ar' ? 
+        'جميع مستشارينا معتمدون من ICCRC ولديهم خبرة واسعة في قوانين الهجرة' :
+        'All our consultants are ICCRC certified with extensive experience in immigration law'
     },
     {
-      name: 'Ahmed Al-Rashid',
-      role: 'Immigration Advisor',
-      experience: '8',
-      specialization: 'Australian Immigration',
-      image: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400'
+      icon: Globe,
+      title: currentLanguage === 'ar' ? 'خبرة دولية' : 'International Expertise',
+      description: currentLanguage === 'ar' ? 
+        'نتعامل مع الهجرة إلى أكثر من 15 دولة حول العالم بخبرة محلية' :
+        'We handle immigration to over 15 countries worldwide with local expertise'
     },
     {
-      name: 'Emily Davis',
-      role: 'Document Specialist',
-      experience: '10',
-      specialization: 'European Immigration',
-      image: 'https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=400'
+      icon: Users,
+      title: currentLanguage === 'ar' ? 'فريق متخصص' : 'Specialized Team',
+      description: currentLanguage === 'ar' ? 
+        'فريق من الخبراء المتخصصين في مختلف أنواع التأشيرات وبرامج الهجرة' :
+        'A team of experts specialized in different visa types and immigration programs'
     }
   ];
 
@@ -195,29 +193,18 @@ const About = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((member, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">{member.name}</h3>
-                  <p className="text-blue-600 font-semibold mb-2">{member.role}</p>
-                  <div className="space-y-1 text-gray-600">
-                    <div className="flex items-center">
-                      <Clock size={16} className="mr-2" />
-                      <span>{member.experience} {t.team_experience}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Star size={16} className="mr-2" />
-                      <span>{member.specialization}</span>
-                    </div>
+            {teamFeatures.map((feature, index) => {
+              const IconComponent = feature.icon;
+              return (
+                <div key={index} className="bg-white rounded-lg shadow-lg p-8 text-center">
+                  <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <IconComponent className="text-blue-600" size={32} />
                   </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">{feature.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
