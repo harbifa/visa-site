@@ -69,7 +69,16 @@ const About = () => {
     { icon: CheckCircle, number: '95%', label: t.achievements_success }
   ];
 
-  const services = [
+  const services = currentLanguage === 'ar' ? [
+    'برامج الهجرة السريعة (Express Entry)',
+    'برامج الترشيح الإقليمية (PNP)',
+    'طلبات تصاريح الدراسة',
+    'معالجة تصاريح العمل',
+    'برامج رعاية الأسرة',
+    'طلبات تأشيرات الزيارة',
+    'خدمات توثيق الوثائق',
+    'استئنافات ومراجعات الهجرة'
+  ] : [
     'Express Entry Immigration Programs',
     'Provincial Nominee Programs (PNP)',
     'Study Permit Applications',
