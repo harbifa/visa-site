@@ -170,6 +170,33 @@ const resources = {
             "feedback": "Excellent consulting for students. Helped fulfill my dream of studying abroad in Canada."
           }
         }
+      },
+      "about": {
+        "title": "About Our Company",
+        "subtitle": "Since 2016, we are experts in Immigration Services, providing reliable consultancy for your immigration journey",
+        "story_title": "Our Story",
+        "story_p1": "Since 2016, we have been dedicated experts in Immigration Services, building a reputation as reliable immigration consultants who handle each case with utmost care and professionalism.",
+        "story_p2": "Our expert team creates great value for immigration by providing certified & reliable Immigration Consultant professionals who can help you get a positive decision on your case.",
+        "story_p3": "We provide services from our ICCRC Registered Associates and have been providing consultancy services for immigration opportunities in foreign countries across the globe.",
+        "story_p4": "Each and every consultant hired at our company has been through our comprehensive 6 months aggressive internal training program that consists of eight different specialized courses.",
+        "achievements_title": "Our Achievements",
+        "achievements_subtitle": "Serving in the GCC since 2016 with outstanding results",
+        "achievements_clients": "Satisfied Clients",
+        "achievements_countries": "Countries Served",
+        "achievements_experience": "Years Experience",
+        "achievements_success": "Success Rate",
+        "services_title": "Our Services",
+        "services_subtitle": "Comprehensive immigration and document clearing services",
+        "team_title": "Our Expert Team",
+        "team_subtitle": "Certified professionals dedicated to your immigration success",
+        "team_experience": "experience",
+        "why_title": "Why Choose Us?",
+        "why_iccrc_title": "ICCRC Registered",
+        "why_iccrc_desc": "All our services are provided by ICCRC registered associates ensuring compliance and reliability.",
+        "why_training_title": "Expert Training",
+        "why_training_desc": "6-month intensive training program with 8 specialized courses for all our consultants.",
+        "why_gcc_title": "GCC Presence",
+        "why_gcc_desc": "Serving in the GCC region since 2016 with deep understanding of local needs."
       }
     },
     pages: {
