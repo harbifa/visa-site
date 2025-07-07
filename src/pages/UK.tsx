@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Clock, Users, Award, ArrowRight } from 'lucide-react';
+import { CheckCircle, Clock, Users, Award } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -87,15 +87,9 @@ const UK = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:uk.programs.skilled.processing')}</span>
-                </div>
-                <button className="text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:uk.programs.skilled.processing')}</span>
               </div>
             </div>
 
@@ -116,15 +110,9 @@ const UK = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:uk.programs.study.processing')}</span>
-                </div>
-                <button className="text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:uk.programs.study.processing')}</span>
               </div>
             </div>
 
@@ -145,15 +133,9 @@ const UK = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:uk.programs.visit.processing')}</span>
-                </div>
-                <button className="text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:uk.programs.visit.processing')}</span>
               </div>
             </div>
 
@@ -174,15 +156,9 @@ const UK = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:uk.programs.family.processing')}</span>
-                </div>
-                <button className="text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:uk.programs.family.processing')}</span>
               </div>
             </div>
           </div>

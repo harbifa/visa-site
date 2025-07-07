@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Clock, Users, Award, ArrowRight } from 'lucide-react';
+import { CheckCircle, Clock, Users, Award } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -135,15 +135,9 @@ const Australia = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:australia.programs.skilled.processing')}</span>
-                </div>
-                <button className="text-green-600 hover:text-green-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:australia.programs.skilled.processing')}</span>
               </div>
             </div>
 
@@ -164,15 +158,9 @@ const Australia = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:australia.programs.study.processing')}</span>
-                </div>
-                <button className="text-green-600 hover:text-green-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:australia.programs.study.processing')}</span>
               </div>
             </div>
 
@@ -193,15 +181,9 @@ const Australia = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:australia.programs.visit.processing')}</span>
-                </div>
-                <button className="text-green-600 hover:text-green-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:australia.programs.visit.processing')}</span>
               </div>
             </div>
 
@@ -222,15 +204,9 @@ const Australia = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:australia.programs.spouse.processing')}</span>
-                </div>
-                <button className="text-green-600 hover:text-green-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:australia.programs.spouse.processing')}</span>
               </div>
             </div>
           </div>

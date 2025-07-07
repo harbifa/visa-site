@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Clock, Users, Award, ArrowRight, MapPin, Briefcase } from 'lucide-react';
+import { CheckCircle, Clock, Users, Award, MapPin, Briefcase } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -170,15 +170,9 @@ const Europe = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:europe.programs.job_seeker.processing')}</span>
-                </div>
-                <button className="text-red-600 hover:text-red-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:europe.programs.job_seeker.processing')}</span>
               </div>
             </div>
 
@@ -199,15 +193,9 @@ const Europe = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:europe.programs.study.processing')}</span>
-                </div>
-                <button className="text-red-600 hover:text-red-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:europe.programs.study.processing')}</span>
               </div>
             </div>
 
@@ -228,15 +216,9 @@ const Europe = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:europe.programs.visit.processing')}</span>
-                </div>
-                <button className="text-red-600 hover:text-red-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:europe.programs.visit.processing')}</span>
               </div>
             </div>
 
@@ -257,15 +239,9 @@ const Europe = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:europe.programs.spouse.processing')}</span>
-                </div>
-                <button className="text-red-600 hover:text-red-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:europe.programs.spouse.processing')}</span>
               </div>
             </div>
           </div>

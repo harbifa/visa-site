@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Clock, Users, Award, ArrowRight, DollarSign } from 'lucide-react';
+import { CheckCircle, Clock, Users, Award, DollarSign } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -165,15 +165,9 @@ const USA = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:usa.programs.e2.processing')}</span>
-                </div>
-                <button className="text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:usa.programs.e2.processing')}</span>
               </div>
             </div>
 
@@ -194,15 +188,9 @@ const USA = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:usa.programs.eb5.processing')}</span>
-                </div>
-                <button className="text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:usa.programs.eb5.processing')}</span>
               </div>
             </div>
 
@@ -223,15 +211,9 @@ const USA = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:usa.programs.student.processing')}</span>
-                </div>
-                <button className="text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:usa.programs.student.processing')}</span>
               </div>
             </div>
 
@@ -252,15 +234,9 @@ const USA = () => {
                 </ul>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
-                  <Clock size={16} />
-                  <span className="text-sm font-medium">{t('pages:usa.programs.visit.processing')}</span>
-                </div>
-                <button className="text-blue-600 hover:text-blue-800 font-semibold flex items-center space-x-1 rtl:space-x-reverse">
-                  <span>{t('pages:common.learn_more')}</span>
-                  <ArrowRight size={16} />
-                </button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse text-blue-600">
+                <Clock size={16} />
+                <span className="text-sm font-medium">{t('pages:usa.programs.visit.processing')}</span>
               </div>
             </div>
           </div>
