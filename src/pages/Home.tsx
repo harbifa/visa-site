@@ -4,9 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { Users, Award, Globe, CheckCircle, ArrowRight, Star, Calendar } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import { emailConfig } from '../config/emailjs';
+import { useLanguage } from '../hooks/useLanguage';
 
 const Home = () => {
   const { t } = useTranslation();
+  const { currentLanguage } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,6 +20,56 @@ const Home = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Blog translations
+  const blogContent = {
+    en: {
+      title: "Alshawamekh Blog",
+      subtitle: "Exclusive articles about immigration, services, and success stories from our expert team",
+      articles: {
+        alshawamekh_success: {
+          title: "Why Choose Alshawamekh for Your Immigration Journey?",
+          excerpt: "Discover what makes Alshawamekh the leading immigration consultancy in the GCC region since 2016."
+        },
+        immigration_guide: {
+          title: "Complete Guide to Immigration Planning",
+          excerpt: "Essential steps and documents you need to prepare for a successful immigration application."
+        },
+        new_programs: {
+          title: "New Immigration Programs Available Now",
+          excerpt: "Latest opportunities for skilled workers, students, and families seeking to immigrate."
+        },
+        success_tips: {
+          title: "5 Key Tips for Immigration Success",
+          excerpt: "Expert advice from our certified consultants to maximize your chances of approval."
+        }
+      }
+    },
+    ar: {
+      title: "مدونة الشوامخ",
+      subtitle: "مقالات حصرية عن الهجرة والخدمات وقصص النجاح من فريقنا المتخصص",
+      articles: {
+        alshawamekh_success: {
+          title: "لماذا تختار الشوامخ لرحلة الهجرة الخاصة بك؟",
+          excerpt: "اكتشف ما يجعل الشوامخ الاستشارة الرائدة في مجال الهجرة في منطقة الخليج منذ عام 2016."
+        },
+        immigration_guide: {
+          title: "دليل شامل لتخطيط الهجرة",
+          excerpt: "الخطوات الأساسية والمستندات التي تحتاجها لإعداد طلب هجرة ناجح."
+        },
+        new_programs: {
+          title: "برامج الهجرة الجديدة المتاحة الآن",
+          excerpt: "أحدث الفرص للعمال المهرة والطلاب والعائلات الساعية للهجرة."
+        },
+        success_tips: {
+          title: "5 نصائح أساسية لنجاح الهجرة",
+          excerpt: "نصائح من خبرائنا المعتمدين لزيادة فرص الموافقة على طلبك."
+        }
+      }
+    }
+  };
+
+  const blogT = blogContent[currentLanguage as keyof typeof blogContent];
 
   // Initialize EmailJS on component mount
   useEffect(() => {
@@ -201,22 +253,32 @@ const Home = () => {
 
   const newsArticles = [
     {
-      title: t('home.news.articles.canada_jobs.title'),
-      excerpt: t('home.news.articles.canada_jobs.excerpt'),
-      date: '2024-01-15',
-      image: 'https://images.pexels.com/photos/416405/pexels-photo-416405.jpeg?auto=compress&cs=tinysrgb&w=400'
+      title: blogT.articles.alshawamekh_success.title,
+      excerpt: blogT.articles.alshawamekh_success.excerpt,
+      date: '2024-12-15',
+      image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=400',
+      slug: '/blog/why-choose-alshawamekh'
     },
     {
-      title: t('home.news.articles.saskatchewan.title'),
-      excerpt: t('home.news.articles.saskatchewan.excerpt'),
-      date: '2024-01-10',
-      image: 'https://images.pexels.com/photos/1486974/pexels-photo-1486974.jpeg?auto=compress&cs=tinysrgb&w=400'
+      title: blogT.articles.immigration_guide.title,
+      excerpt: blogT.articles.immigration_guide.excerpt,
+      date: '2024-12-10',
+      image: 'https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg?auto=compress&cs=tinysrgb&w=400',
+      slug: '/blog/complete-immigration-guide'
     },
     {
-      title: t('home.news.articles.australia_skilled.title'),
-      excerpt: t('home.news.articles.australia_skilled.excerpt'),
-      date: '2024-01-08',
-      image: 'https://images.pexels.com/photos/995765/pexels-photo-995765.jpeg?auto=compress&cs=tinysrgb&w=400'
+      title: blogT.articles.new_programs.title,
+      excerpt: blogT.articles.new_programs.excerpt,
+      date: '2024-12-05',
+      image: 'https://images.pexels.com/photos/416405/pexels-photo-416405.jpeg?auto=compress&cs=tinysrgb&w=400',
+      slug: '/blog/new-immigration-programs'
+    },
+    {
+      title: blogT.articles.success_tips.title,
+      excerpt: blogT.articles.success_tips.excerpt,
+      date: '2024-12-01',
+      image: 'https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=400',
+      slug: '/blog/immigration-success-tips'
     }
   ];
 
@@ -495,12 +557,12 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Latest News and Resources */}
+      {/* Alshawamekh Blog */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{t('home.news.title')}</h2>
-            <p className="text-lg text-gray-600">{t('home.news.subtitle')}</p>
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{blogT.title}</h2>
+            <p className="text-lg text-gray-600">{blogT.subtitle}</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -516,28 +578,23 @@ const Home = () => {
                     <Calendar size={16} className="mr-2 rtl:mr-0 rtl:ml-2" />
                     {new Date(article.date).toLocaleDateString()}
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{article.title}</h3>
-                  <p className="text-gray-600 mb-4">{article.excerpt}</p>
-                  <a
-                    href="#"
-                    className="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold"
-                  >
-                    {t('home.news.read_more')}
-                    <ArrowRight size={16} className="ml-2 rtl:ml-0 rtl:mr-2 rtl:scale-x-[-1]" />
-                  </a>
+                  <Link to={article.slug} className="block">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors cursor-pointer">{article.title}</h3>
+                  </Link>
+                  <p className="text-gray-600">{article.excerpt}</p>
                 </div>
               </div>
             ))}
           </div>
           
           <div className="text-center mt-12">
-            <a
-              href="#"
+            <Link
+              to="/blog"
               className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
             >
-              {t('home.news.read_more_articles')}
+              {currentLanguage === 'ar' ? 'زيارة مدونة الشوامخ' : 'Visit Alshawamekh Blog'}
               <ArrowRight size={20} className="ml-2 rtl:ml-0 rtl:mr-2 rtl:scale-x-[-1]" />
-            </a>
+            </Link>
           </div>
         </div>
       </section>

@@ -10,6 +10,7 @@ const resources = {
         "home": "Home",
         "about": "About",
         "about_us": "About Us",
+        "blog": "Blog",
         "services": "Services",
         "contact": "Contact",
         "pay_online": "Pay Online"
@@ -1527,6 +1528,7 @@ const resources = {
         "home": "الرئيسية",
         "about": "من نحن",
         "about_us": "من نحن",
+        "blog": "المدونة",
         "services": "الخدمات",
         "contact": "اتصل بنا",
         "pay_online": "دفع أونلاين"

@@ -145,6 +145,9 @@ const Header = () => {
             <Link to="/about" className="text-gray-700 hover:text-blue-900 transition-colors">
               {t('navigation.about')}
             </Link>
+            <Link to="/blog" className="text-gray-700 hover:text-blue-900 transition-colors">
+              {t('navigation.blog')}
+            </Link>
             
             {/* Services Dropdown */}
             <div className="relative dropdown-container">
@@ -209,6 +212,9 @@ const Header = () => {
               </Link>
               <Link to="/about" className="text-gray-700 hover:text-blue-900" onClick={() => setIsMenuOpen(false)}>
                 {t('navigation.about')}
+              </Link>
+              <Link to="/blog" className="text-gray-700 hover:text-blue-900" onClick={() => setIsMenuOpen(false)}>
+                {t('navigation.blog')}
               </Link>
               
               {/* Mobile Services */}

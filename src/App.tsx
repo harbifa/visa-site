@@ -6,6 +6,11 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Blog from './pages/Blog';
+import WhyChooseAlshawamekh from './pages/blog/WhyChooseAlshawamekh';
+import ImmigrationGuide from './pages/blog/ImmigrationGuide';
+import NewPrograms from './pages/blog/NewPrograms';
+import SuccessTips from './pages/blog/SuccessTips';
 import Canada from './pages/Canada';
 import Australia from './pages/Australia';
 import UK from './pages/UK';
@@ -33,6 +38,11 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/why-choose-alshawamekh" element={<WhyChooseAlshawamekh />} />
+            <Route path="/blog/complete-immigration-guide" element={<ImmigrationGuide />} />
+            <Route path="/blog/new-immigration-programs" element={<NewPrograms />} />
+            <Route path="/blog/immigration-success-tips" element={<SuccessTips />} />
             <Route path="/canada" element={<Canada />} />
             <Route path="/australia" element={<Australia />} />
             <Route path="/uk" element={<UK />} />
