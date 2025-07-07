@@ -1,0 +1,6 @@
+Contact: info@shawmekimmigration.com
+Contact: tel:+966501367513
+Expires: 2025-12-31T23:59:59.000Z
+Preferred-Languages: ar, en
+Canonical: https://shawmekimmigration.com/.well-known/security.txt
+Policy: https://shawmekimmigration.com/privacy-policy 
