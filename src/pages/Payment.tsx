@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CreditCard, Lock, ArrowLeft, CheckCircle, ExternalLink, Shield, AlertTriangle } from 'lucide-react';
-
-
+import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../hooks/useLanguage';
 
 const Payment = () => {
+  const { t } = useTranslation();
+  const { currentLanguage } = useLanguage();
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -27,20 +30,20 @@ const Payment = () => {
     try {
       // Validate form data
       if (!formData.name || !formData.email || !formData.phone || !formData.amount || !formData.serviceType) {
-        setPaymentError('Please fill in all required fields');
+        setPaymentError(t('payment.errors.required_fields'));
         return;
       }
 
       const amount = parseFloat(formData.amount);
       if (isNaN(amount) || amount <= 0) {
-        setPaymentError('Please enter a valid amount greater than 0');
+        setPaymentError(t('payment.errors.invalid_amount'));
         return;
       }
 
       // Email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
-        setPaymentError('Please enter a valid email address');
+        setPaymentError(t('payment.errors.invalid_email'));
         return;
       }
 
@@ -77,11 +80,11 @@ const Payment = () => {
             console.log('✅ Payment URL received, redirecting...', result.url);
             window.location.href = result.url;
           } else {
-            setPaymentError(result.error?.message || 'Failed to create payment session');
+            setPaymentError(result.error?.message || t('payment.errors.connection_error'));
           }
         } catch (error) {
           console.error('❌ Payment creation failed:', error);
-          setPaymentError('Failed to connect to payment service');
+          setPaymentError(t('payment.errors.connection_error'));
         }
       } else {
         // DEMO: Use demo payment page
@@ -107,8 +110,8 @@ const Payment = () => {
 
     } catch (error) {
       console.error('❌ Payment submission error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-      setPaymentError(`Payment failed: ${errorMessage}`);
+      const errorMessage = error instanceof Error ? error.message : t('payment.errors.unexpected_error');
+      setPaymentError(`${t('payment.errors.payment_failed')} ${errorMessage}`);
     } finally {
       setIsProcessing(false);
     }
@@ -123,28 +126,28 @@ const Payment = () => {
   };
 
   const services = [
-    'Express Entry Visa',
-    'Provincial Nomination Program',
-    'Study Visa',
-    'Visit Visa',
-    'Work Permit',
-    'Family/Spouse Visa',
-    'Business Visa',
-    'Consultation Services',
-    'Document Translation',
-    'Other Services'
+    t('payment.services.express_entry'),
+    t('payment.services.pnp'),
+    t('payment.services.study_visa'),
+    t('payment.services.visit_visa'),
+    t('payment.services.work_permit'),
+    t('payment.services.family_visa'),
+    t('payment.services.business_visa'),
+    t('payment.services.consultation'),
+    t('payment.services.document_translation'),
+    t('payment.services.other')
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className={`min-h-screen bg-gray-50 py-12 ${currentLanguage === 'ar' ? 'rtl' : ''}`}>
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <CreditCard className="text-blue-600 mr-3" size={32} />
-            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">Pay Online</h1>
+            <CreditCard className="text-blue-600 mr-3 rtl:mr-0 rtl:ml-3" size={32} />
+            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900">{t('payment.title')}</h1>
           </div>
-          <p className="text-gray-600 text-lg">Secure payment processing via Moyasar</p>
+          <p className="text-gray-600 text-lg">{t('payment.subtitle')}</p>
         </div>
 
         {/* Back Button */}
@@ -153,8 +156,8 @@ const Payment = () => {
             to="/" 
             className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
           >
-            <ArrowLeft size={16} className="mr-2" />
-            Back to Home
+            <ArrowLeft size={16} className="mr-2 rtl:mr-0 rtl:ml-2 rtl:scale-x-[-1]" />
+            {t('payment.back_to_home')}
           </Link>
         </div>
 
@@ -162,19 +165,19 @@ const Payment = () => {
           {/* Payment Form */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-lg p-6 lg:p-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6">Payment Information</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-6">{t('payment.payment_information')}</h2>
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Personal Information */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium text-gray-800 border-b border-gray-200 pb-2">
-                    Personal Information
+                    {t('payment.personal_information')}
                   </h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                        Full Name *
+                        {t('payment.form.full_name')} *
                       </label>
                       <input
                         type="text"
@@ -183,14 +186,14 @@ const Payment = () => {
                         value={formData.name}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                        placeholder="Enter your full name"
+                        placeholder={t('payment.form.placeholder_name')}
                         required
                       />
                     </div>
                     
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                        Email Address *
+                        {t('payment.form.email_address')} *
                       </label>
                       <input
                         type="email"
@@ -199,7 +202,7 @@ const Payment = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                        placeholder="your.email@example.com"
+                        placeholder={t('payment.form.placeholder_email')}
                         required
                       />
                     </div>
@@ -208,7 +211,7 @@ const Payment = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                        Phone Number *
+                        {t('payment.form.phone_number')} *
                       </label>
                       <input
                         type="tel"
@@ -217,14 +220,14 @@ const Payment = () => {
                         value={formData.phone}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                        placeholder="+966 50 123 4567"
+                        placeholder={t('payment.form.placeholder_phone')}
                         required
                       />
                     </div>
                     
                     <div>
                       <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">
-                        Amount (SAR) *
+                        {t('payment.form.amount')} *
                       </label>
                       <input
                         type="number"
@@ -233,7 +236,7 @@ const Payment = () => {
                         value={formData.amount}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                        placeholder="0.00"
+                        placeholder={t('payment.form.placeholder_amount')}
                         min="1"
                         step="0.01"
                         required
@@ -245,12 +248,12 @@ const Payment = () => {
                 {/* Service Information */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium text-gray-800 border-b border-gray-200 pb-2">
-                    Service Details
+                    {t('payment.service_details')}
                   </h3>
                   
                   <div>
                     <label htmlFor="serviceType" className="block text-sm font-medium text-gray-700 mb-2">
-                      Service Type *
+                      {t('payment.form.service_type')} *
                     </label>
                     <select
                       id="serviceType"
@@ -260,7 +263,7 @@ const Payment = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                       required
                     >
-                      <option value="">Select Service Type</option>
+                      <option value="">{t('payment.form.select_service')}</option>
                       {services.map((service) => (
                         <option key={service} value={service}>
                           {service}
@@ -271,7 +274,7 @@ const Payment = () => {
 
                   <div>
                     <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-                      Additional Details
+                      {t('payment.form.additional_details')}
                     </label>
                     <textarea
                       id="description"
@@ -280,7 +283,7 @@ const Payment = () => {
                       onChange={handleInputChange}
                       rows={3}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                      placeholder="Any additional information about your service request..."
+                      placeholder={t('payment.form.placeholder_details')}
                     />
                   </div>
                 </div>
@@ -288,12 +291,12 @@ const Payment = () => {
                 {/* Billing Address */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium text-gray-800 border-b border-gray-200 pb-2">
-                    Billing Address
+                    {t('payment.billing_address')}
                   </h3>
                   
                   <div>
                     <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
-                      Address *
+                      {t('payment.form.address')} *
                     </label>
                     <input
                       type="text"
@@ -302,14 +305,14 @@ const Payment = () => {
                       value={formData.address}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                      placeholder="Enter your address"
+                      placeholder={t('payment.form.placeholder_address')}
                       required
                     />
                   </div>
                   
                   <div>
                     <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-                      City *
+                      {t('payment.form.city')} *
                     </label>
                     <input
                       type="text"
@@ -318,7 +321,7 @@ const Payment = () => {
                       value={formData.city}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                      placeholder="Enter your city"
+                      placeholder={t('payment.form.placeholder_city')}
                       required
                     />
                   </div>
@@ -328,9 +331,9 @@ const Payment = () => {
                 {paymentError && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                     <div className="flex items-start">
-                      <AlertTriangle className="text-red-600 mr-3 mt-0.5 flex-shrink-0" size={20} />
+                      <AlertTriangle className="text-red-600 mr-3 rtl:mr-0 rtl:ml-3 mt-0.5 flex-shrink-0" size={20} />
                       <div>
-                        <h4 className="text-red-900 font-medium mb-2">Payment Error</h4>
+                        <h4 className="text-red-900 font-medium mb-2">{t('payment.errors.payment_error')}</h4>
                         <p className="text-red-800 text-sm">{paymentError}</p>
                       </div>
                     </div>
@@ -340,12 +343,11 @@ const Payment = () => {
                 {/* Moyasar Notice */}
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <div className="flex items-start">
-                    <Shield className="text-blue-600 mr-3 mt-0.5 flex-shrink-0" size={20} />
+                    <Shield className="text-blue-600 mr-3 rtl:mr-0 rtl:ml-3 mt-0.5 flex-shrink-0" size={20} />
                     <div>
-                      <h4 className="text-blue-900 font-medium mb-2">Secure Payment via Moyasar</h4>
+                      <h4 className="text-blue-900 font-medium mb-2">{t('payment.notices.secure_payment')}</h4>
                       <p className="text-blue-800 text-sm">
-                        After submitting this form, you will be redirected to Moyasar's secure payment gateway 
-                        to complete your payment with your preferred payment method.
+                        {t('payment.notices.redirect_notice')}
                       </p>
                     </div>
                   </div>
@@ -364,13 +366,13 @@ const Payment = () => {
                   >
                     {isProcessing ? (
                       <div className="flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        Preparing Payment...
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2 rtl:mr-0 rtl:ml-2"></div>
+                        {t('payment.buttons.processing')}
                       </div>
                     ) : (
                       <div className="flex items-center justify-center">
-                        <ExternalLink size={20} className="mr-2" />
-                        Proceed to Moyasar Payment
+                        <ExternalLink size={20} className="mr-2 rtl:mr-0 rtl:ml-2" />
+                        {t('payment.buttons.submit')}
                       </div>
                     )}
                   </button>
@@ -384,19 +386,19 @@ const Payment = () => {
             {/* Payment Summary */}
             {formData.amount && (
               <div className="bg-white rounded-xl shadow-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Payment Summary</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('payment.payment_summary')}</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Service:</span>
-                    <span className="font-medium">{formData.serviceType || 'Not selected'}</span>
+                    <span className="text-gray-600">{t('payment.summary.service')}</span>
+                    <span className="font-medium">{formData.serviceType || t('payment.summary.not_selected')}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Amount:</span>
+                    <span className="text-gray-600">{t('payment.summary.amount')}</span>
                     <span className="font-medium text-green-600">{formData.amount} SAR</span>
                   </div>
                   <hr className="my-2" />
                   <div className="flex justify-between text-lg font-semibold">
-                    <span>Total:</span>
+                    <span>{t('payment.summary.total')}</span>
                     <span className="text-green-600">{formData.amount} SAR</span>
                   </div>
                 </div>
@@ -406,72 +408,72 @@ const Payment = () => {
             {/* Moyasar Info */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <Lock className="text-green-600 mr-2" size={20} />
-                Payment Security
+                <Lock className="text-green-600 mr-2 rtl:mr-0 rtl:ml-2" size={20} />
+                {t('payment.payment_security')}
               </h3>
               <div className="space-y-3 text-sm text-gray-600">
                 <div className="flex items-start">
-                  <CheckCircle className="text-green-500 mr-2 mt-0.5 flex-shrink-0" size={16} />
-                  <span>Powered by Moyasar - Saudi's trusted payment gateway</span>
+                  <CheckCircle className="text-green-500 mr-2 rtl:mr-0 rtl:ml-2 mt-0.5 flex-shrink-0" size={16} />
+                  <span>{t('payment.security.powered_by')}</span>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle className="text-green-500 mr-2 mt-0.5 flex-shrink-0" size={16} />
-                  <span>PCI DSS Level 1 compliant</span>
+                  <CheckCircle className="text-green-500 mr-2 rtl:mr-0 rtl:ml-2 mt-0.5 flex-shrink-0" size={16} />
+                  <span>{t('payment.security.pci_compliant')}</span>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle className="text-green-500 mr-2 mt-0.5 flex-shrink-0" size={16} />
-                  <span>256-bit SSL encryption</span>
+                  <CheckCircle className="text-green-500 mr-2 rtl:mr-0 rtl:ml-2 mt-0.5 flex-shrink-0" size={16} />
+                  <span>{t('payment.security.ssl_encryption')}</span>
                 </div>
                 <div className="flex items-start">
-                  <CheckCircle className="text-green-500 mr-2 mt-0.5 flex-shrink-0" size={16} />
-                  <span>Supports all major payment methods</span>
+                  <CheckCircle className="text-green-500 mr-2 rtl:mr-0 rtl:ml-2 mt-0.5 flex-shrink-0" size={16} />
+                  <span>{t('payment.security.payment_methods')}</span>
                 </div>
               </div>
             </div>
 
             {/* Contact Info */}
             <div className="bg-blue-50 rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-4">Need Help?</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">{t('payment.need_help')}</h3>
               <div className="space-y-2 text-sm text-blue-800">
-                <p>📧 info@shawamek.sa</p>
+                <p>📧 info@shawmekimmigration.com</p>
                 <p>📞 +966501367513</p>
                 <p className="pt-2 text-xs text-blue-600">
-                  Our support team is available 24/7 to assist you with your payment.
+                  {t('payment.contact.support_available')}
                 </p>
               </div>
             </div>
 
             {/* Accepted Payment Methods */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Accepted Payment Methods</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('payment.accepted_payment_methods')}</h3>
               <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
                 <div className="flex items-center">
-                  <div className="w-8 h-5 bg-blue-600 rounded mr-2"></div>
-                  Visa
+                  <div className="w-8 h-5 bg-blue-600 rounded mr-2 rtl:mr-0 rtl:ml-2"></div>
+                  {t('payment.payment_methods.visa')}
                 </div>
                 <div className="flex items-center">
-                  <div className="w-8 h-5 bg-red-600 rounded mr-2"></div>
-                  Mastercard
+                  <div className="w-8 h-5 bg-red-600 rounded mr-2 rtl:mr-0 rtl:ml-2"></div>
+                  {t('payment.payment_methods.mastercard')}
                 </div>
                 <div className="flex items-center">
-                  <div className="w-8 h-5 bg-green-600 rounded mr-2"></div>
-                  Mada
+                  <div className="w-8 h-5 bg-green-600 rounded mr-2 rtl:mr-0 rtl:ml-2"></div>
+                  {t('payment.payment_methods.mada')}
                 </div>
                 <div className="flex items-center">
-                  <div className="w-8 h-5 bg-orange-600 rounded mr-2"></div>
-                  Apple Pay
+                  <div className="w-8 h-5 bg-orange-600 rounded mr-2 rtl:mr-0 rtl:ml-2"></div>
+                  {t('payment.payment_methods.apple_pay')}
                 </div>
                 <div className="flex items-center">
-                  <div className="w-8 h-5 bg-blue-500 rounded mr-2"></div>
-                  STCPay
+                  <div className="w-8 h-5 bg-blue-500 rounded mr-2 rtl:mr-0 rtl:ml-2"></div>
+                  {t('payment.payment_methods.stc_pay')}
                 </div>
                 <div className="flex items-center">
-                  <div className="w-8 h-5 bg-purple-600 rounded mr-2"></div>
-                  Bank Transfer
+                  <div className="w-8 h-5 bg-purple-600 rounded mr-2 rtl:mr-0 rtl:ml-2"></div>
+                  {t('payment.payment_methods.bank_transfer')}
                 </div>
               </div>
               <p className="text-xs text-gray-500 mt-3">
-                All payment methods are processed securely through Moyasar
+                {t('payment.payment_methods.secure_processing')}
               </p>
             </div>
           </div>

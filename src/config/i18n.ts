@@ -65,6 +65,174 @@ const resources = {
       "common": {
         "more_services": "more services"
       },
+      "payment": {
+        "title": "Pay Online",
+        "subtitle": "Secure payment processing via Moyasar",
+        "back_to_home": "Back to Home",
+        "payment_information": "Payment Information",
+        "personal_information": "Personal Information",
+        "service_details": "Service Details",
+        "billing_address": "Billing Address",
+        "payment_summary": "Payment Summary",
+        "payment_security": "Payment Security",
+        "need_help": "Need Help?",
+        "accepted_payment_methods": "Accepted Payment Methods",
+        "form": {
+          "full_name": "Full Name",
+          "email_address": "Email Address",
+          "phone_number": "Phone Number",
+          "amount": "Amount (SAR)",
+          "service_type": "Service Type",
+          "additional_details": "Additional Details",
+          "address": "Address",
+          "city": "City",
+          "select_service": "Select Service Type",
+          "placeholder_name": "Enter your full name",
+          "placeholder_email": "your.email@example.com",
+          "placeholder_phone": "+966 50 123 4567",
+          "placeholder_amount": "0.00",
+          "placeholder_address": "Enter your address",
+          "placeholder_city": "Enter your city",
+          "placeholder_details": "Any additional information about your service request..."
+        },
+        "services": {
+          "express_entry": "Express Entry Visa",
+          "pnp": "Provincial Nomination Program",
+          "study_visa": "Study Visa",
+          "visit_visa": "Visit Visa",
+          "work_permit": "Work Permit",
+          "family_visa": "Family/Spouse Visa",
+          "business_visa": "Business Visa",
+          "consultation": "Consultation Services",
+          "document_translation": "Document Translation",
+          "other": "Other Services"
+        },
+        "summary": {
+          "service": "Service:",
+          "amount": "Amount:",
+          "total": "Total:",
+          "not_selected": "Not selected"
+        },
+        "security": {
+          "powered_by": "Powered by Moyasar - Saudi's trusted payment gateway",
+          "pci_compliant": "PCI DSS Level 1 compliant",
+          "ssl_encryption": "256-bit SSL encryption",
+          "payment_methods": "Supports all major payment methods"
+        },
+        "contact": {
+          "support_available": "Our support team is available 24/7 to assist you with your payment."
+        },
+        "payment_methods": {
+          "visa": "Visa",
+          "mastercard": "Mastercard",
+          "mada": "Mada",
+          "apple_pay": "Apple Pay",
+          "stc_pay": "STCPay",
+          "bank_transfer": "Bank Transfer",
+          "secure_processing": "All payment methods are processed securely through Moyasar"
+        },
+        "buttons": {
+          "submit": "Proceed to Moyasar Payment",
+          "processing": "Preparing Payment..."
+        },
+        "errors": {
+          "payment_error": "Payment Error",
+          "required_fields": "Please fill in all required fields",
+          "invalid_amount": "Please enter a valid amount greater than 0",
+          "invalid_email": "Please enter a valid email address",
+          "payment_failed": "Payment failed:",
+          "connection_error": "Failed to connect to payment service",
+          "unexpected_error": "An unexpected error occurred"
+        },
+        "notices": {
+          "secure_payment": "Secure Payment via Moyasar",
+          "redirect_notice": "After submitting this form, you will be redirected to Moyasar's secure payment gateway to complete your payment with your preferred payment method."
+        }
+      },
+      "payment": {
+        "title": "Pay Online",
+        "subtitle": "Secure payment processing via Moyasar",
+        "back_to_home": "Back to Home",
+        "payment_information": "Payment Information",
+        "personal_information": "Personal Information",
+        "service_details": "Service Details",
+        "billing_address": "Billing Address",
+        "payment_summary": "Payment Summary",
+        "payment_security": "Payment Security",
+        "need_help": "Need Help?",
+        "accepted_payment_methods": "Accepted Payment Methods",
+        "form": {
+          "full_name": "Full Name",
+          "email_address": "Email Address",
+          "phone_number": "Phone Number",
+          "amount": "Amount (SAR)",
+          "service_type": "Service Type",
+          "additional_details": "Additional Details",
+          "address": "Address",
+          "city": "City",
+          "select_service": "Select Service Type",
+          "placeholder_name": "Enter your full name",
+          "placeholder_email": "your.email@example.com",
+          "placeholder_phone": "+966 50 123 4567",
+          "placeholder_amount": "0.00",
+          "placeholder_address": "Enter your address",
+          "placeholder_city": "Enter your city",
+          "placeholder_details": "Any additional information about your service request..."
+        },
+        "services": {
+          "express_entry": "Express Entry Visa",
+          "pnp": "Provincial Nomination Program",
+          "study_visa": "Study Visa",
+          "visit_visa": "Visit Visa",
+          "work_permit": "Work Permit",
+          "family_visa": "Family/Spouse Visa",
+          "business_visa": "Business Visa",
+          "consultation": "Consultation Services",
+          "document_translation": "Document Translation",
+          "other": "Other Services"
+        },
+        "summary": {
+          "service": "Service:",
+          "amount": "Amount:",
+          "total": "Total:",
+          "not_selected": "Not selected"
+        },
+        "security": {
+          "powered_by": "Powered by Moyasar - Saudi's trusted payment gateway",
+          "pci_compliant": "PCI DSS Level 1 compliant",
+          "ssl_encryption": "256-bit SSL encryption",
+          "payment_methods": "Supports all major payment methods"
+        },
+        "contact": {
+          "support_available": "Our support team is available 24/7 to assist you with your payment."
+        },
+        "payment_methods": {
+          "visa": "Visa",
+          "mastercard": "Mastercard",
+          "mada": "Mada",
+          "apple_pay": "Apple Pay",
+          "stc_pay": "STCPay",
+          "bank_transfer": "Bank Transfer",
+          "secure_processing": "All payment methods are processed securely through Moyasar"
+        },
+        "buttons": {
+          "submit": "Proceed to Moyasar Payment",
+          "processing": "Preparing Payment..."
+        },
+        "errors": {
+          "payment_error": "Payment Error",
+          "required_fields": "Please fill in all required fields",
+          "invalid_amount": "Please enter a valid amount greater than 0",
+          "invalid_email": "Please enter a valid email address",
+          "payment_failed": "Payment failed:",
+          "connection_error": "Failed to connect to payment service",
+          "unexpected_error": "An unexpected error occurred"
+        },
+        "notices": {
+          "secure_payment": "Secure Payment via Moyasar",
+          "redirect_notice": "After submitting this form, you will be redirected to Moyasar's secure payment gateway to complete your payment with your preferred payment method."
+        }
+      },
       "home": {
         "hero": {
           "title": "Hi, How Can We Help You?",
@@ -1582,6 +1750,90 @@ const resources = {
       },
       "common": {
         "more_services": "خدمات أخرى"
+      },
+      "payment": {
+        "title": "دفع أونلاين",
+        "subtitle": "معالجة دفع آمنة عبر مُيسر",
+        "back_to_home": "العودة للرئيسية",
+        "payment_information": "معلومات الدفع",
+        "personal_information": "المعلومات الشخصية",
+        "service_details": "تفاصيل الخدمة",
+        "billing_address": "عنوان الفواتير",
+        "payment_summary": "ملخص الدفع",
+        "payment_security": "أمان الدفع",
+        "need_help": "تحتاج مساعدة؟",
+        "accepted_payment_methods": "طرق الدفع المقبولة",
+        "form": {
+          "full_name": "الاسم الكامل",
+          "email_address": "عنوان البريد الإلكتروني",
+          "phone_number": "رقم الهاتف",
+          "amount": "المبلغ (ريال سعودي)",
+          "service_type": "نوع الخدمة",
+          "additional_details": "تفاصيل إضافية",
+          "address": "العنوان",
+          "city": "المدينة",
+          "select_service": "اختر نوع الخدمة",
+          "placeholder_name": "أدخل اسمك الكامل",
+          "placeholder_email": "your.email@example.com",
+          "placeholder_phone": "+966 50 123 4567",
+          "placeholder_amount": "0.00",
+          "placeholder_address": "أدخل عنوانك",
+          "placeholder_city": "أدخل مدينتك",
+          "placeholder_details": "أي معلومات إضافية حول طلب الخدمة..."
+        },
+        "services": {
+          "express_entry": "فيزا الدخول السريع",
+          "pnp": "برنامج الترشيح الإقليمي",
+          "study_visa": "فيزا الدراسة",
+          "visit_visa": "فيزا الزيارة",
+          "work_permit": "تصريح العمل",
+          "family_visa": "فيزا العائلة/الزوج",
+          "business_visa": "فيزا الأعمال",
+          "consultation": "خدمات الاستشارة",
+          "document_translation": "ترجمة المستندات",
+          "other": "خدمات أخرى"
+        },
+        "summary": {
+          "service": "الخدمة:",
+          "amount": "المبلغ:",
+          "total": "المجموع:",
+          "not_selected": "غير محدد"
+        },
+        "security": {
+          "powered_by": "مدعوم من مُيسر - بوابة الدفع الموثوقة في السعودية",
+          "pci_compliant": "متوافق مع معايير PCI DSS المستوى الأول",
+          "ssl_encryption": "تشفير SSL 256-بت",
+          "payment_methods": "يدعم جميع طرق الدفع الرئيسية"
+        },
+        "contact": {
+          "support_available": "فريق الدعم متاح على مدار الساعة طوال أيام الأسبوع لمساعدتك في عملية الدفع."
+        },
+        "payment_methods": {
+          "visa": "فيزا",
+          "mastercard": "ماستركارد",
+          "mada": "مدى",
+          "apple_pay": "أبل باي",
+          "stc_pay": "STC Pay",
+          "bank_transfer": "تحويل بنكي",
+          "secure_processing": "جميع طرق الدفع تتم معالجتها بأمان عبر مُيسر"
+        },
+        "buttons": {
+          "submit": "المتابعة إلى دفع مُيسر",
+          "processing": "تحضير الدفع..."
+        },
+        "errors": {
+          "payment_error": "خطأ في الدفع",
+          "required_fields": "يرجى ملء جميع الحقول المطلوبة",
+          "invalid_amount": "يرجى إدخال مبلغ صحيح أكبر من 0",
+          "invalid_email": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+          "payment_failed": "فشل في الدفع:",
+          "connection_error": "فشل في الاتصال بخدمة الدفع",
+          "unexpected_error": "حدث خطأ غير متوقع"
+        },
+        "notices": {
+          "secure_payment": "دفع آمن عبر مُيسر",
+          "redirect_notice": "بعد إرسال هذا النموذج، سيتم توجيهك إلى بوابة الدفع الآمنة لمُيسر لإكمال دفعتك بطريقة الدفع المفضلة لديك."
+        }
       },
       "home": {
         "hero": {
