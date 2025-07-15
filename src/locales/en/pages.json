@@ -84,7 +84,23 @@
       "fill_required": "Please fill in all required fields",
       "payment_failed": "Payment processing failed:",
       "unknown_error": "Unknown error",
-      "payment_error": "An error occurred while processing payment. Please try again."
+      "payment_error": "An error occurred while processing payment. Please try again.",
+      "full_name": "Full Name",
+      "email_address": "Email Address",
+      "phone_number": "Phone Number",
+      "amount": "Amount",
+      "service_type": "Service Type",
+      "additional_details": "Additional Details",
+      "address": "Address",
+      "city": "City",
+      "placeholder_name": "Enter your full name",
+      "placeholder_email": "Enter your email address",
+      "placeholder_phone": "Enter your phone number",
+      "placeholder_amount": "Enter amount in Saudi Riyal",
+      "placeholder_details": "Any additional details about the service required",
+      "placeholder_address": "Enter your address",
+      "placeholder_city": "Enter your city",
+      "select_service": "Select Service Type"
     }
   },
   "payment_callback": {

@@ -84,7 +84,23 @@
       "fill_required": "يرجى ملء جميع الحقول المطلوبة",
       "payment_failed": "فشل في معالجة الدفع:",
       "unknown_error": "خطأ غير معروف",
-      "payment_error": "حدث خطأ في معالجة الدفع. يرجى المحاولة مرة أخرى."
+      "payment_error": "حدث خطأ في معالجة الدفع. يرجى المحاولة مرة أخرى.",
+      "full_name": "الاسم الكامل",
+      "email_address": "البريد الإلكتروني",
+      "phone_number": "رقم الهاتف",
+      "amount": "المبلغ",
+      "service_type": "نوع الخدمة",
+      "additional_details": "تفاصيل إضافية",
+      "address": "العنوان",
+      "city": "المدينة",
+      "placeholder_name": "أدخل اسمك الكامل",
+      "placeholder_email": "أدخل بريدك الإلكتروني",
+      "placeholder_phone": "أدخل رقم هاتفك",
+      "placeholder_amount": "أدخل المبلغ بالريال السعودي",
+      "placeholder_details": "أي تفاصيل إضافية حول الخدمة المطلوبة",
+      "placeholder_address": "أدخل عنوانك",
+      "placeholder_city": "أدخل مدينتك",
+      "select_service": "اختر نوع الخدمة"
     }
   },
   "payment_callback": {
