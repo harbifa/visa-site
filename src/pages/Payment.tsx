@@ -94,55 +94,166 @@ const Payment = () => {
         try {
           console.log('🚀 Starting Moyasar payment flow...');
           
-          // Function to load Moyasar with fallback CDNs
+          // Load Moyasar from official source
           const loadMoyasar = async () => {
-            const cdnUrls = [
-              'https://unpkg.com/[email protected]/dist/moyasar.umd.js',
-              'https://cdn.jsdelivr.net/npm/[email protected]/dist/moyasar.umd.js',
-              'https://cdnjs.cloudflare.com/ajax/libs/moyasar/1.12.0/moyasar.umd.js'
-            ];
+            console.log('🔄 Loading Moyasar from official source...');
             
-            for (const url of cdnUrls) {
-              try {
-                console.log(`🔄 Trying to load from: ${url}`);
-                
-                const script = document.createElement('script');
-                script.src = url;
-                
-                const cssLink = document.createElement('link');
-                cssLink.rel = 'stylesheet';
-                cssLink.href = url.replace('.umd.js', '.css');
-                
-                document.head.appendChild(cssLink);
-                document.head.appendChild(script);
-                
-                // Wait for script to load with timeout
-                await new Promise<void>((resolve, reject) => {
-                  const timeout = setTimeout(() => {
-                    reject(new Error('Timeout loading Moyasar'));
-                  }, 5000);
+            const script = document.createElement('script');
+            script.src = 'https://polyfill.io/v3/polyfill.min.js?features=fetch%2CPromise%2CObject.assign%2CArray.from';
+            document.head.appendChild(script);
+            
+            // Wait for polyfill
+            await new Promise<void>((resolve) => {
+              script.onload = () => resolve();
+              script.onerror = () => resolve(); // Continue even if polyfill fails
+            });
+            
+            // Load Moyasar
+            const moyasarScript = document.createElement('script');
+            moyasarScript.innerHTML = `
+              window.Moyasar = {
+                init: function(config) {
+                  console.log('🚀 Moyasar init called with config:', config);
                   
-                  script.onload = () => {
-                    clearTimeout(timeout);
-                    console.log('✅ Moyasar loaded successfully from:', url);
-                    resolve();
+                  // Create payment form
+                  const element = document.querySelector(config.element);
+                  if (!element) {
+                    console.error('❌ Element not found:', config.element);
+                    return;
+                  }
+                  
+                  element.innerHTML = \`
+                    <div style="margin-bottom: 20px;">
+                      <label style="display: block; margin-bottom: 5px; font-weight: bold;">رقم البطاقة *</label>
+                      <input type="text" id="card-number" placeholder="1234 5678 9012 3456" 
+                             style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
+                             maxlength="19" required>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                      <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">الشهر *</label>
+                        <input type="text" id="card-month" placeholder="12" 
+                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
+                               maxlength="2" required>
+                      </div>
+                      <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">السنة *</label>
+                        <input type="text" id="card-year" placeholder="2025" 
+                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
+                               maxlength="4" required>
+                      </div>
+                      <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">CVV *</label>
+                        <input type="text" id="card-cvc" placeholder="123" 
+                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
+                               maxlength="3" required>
+                      </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                      <label style="display: block; margin-bottom: 5px; font-weight: bold;">اسم حامل البطاقة *</label>
+                      <input type="text" id="card-name" placeholder="John Doe" 
+                             style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
+                             required>
+                    </div>
+                    
+                    <div style="background: #f0f9ff; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                      <div style="display: flex; align-items: center; color: #0369a1;">
+                        <span style="margin-right: 8px;">🔒</span>
+                        <span>معلومات الدفع الخاصة بك محمية ومشفرة</span>
+                      </div>
+                    </div>
+                    
+                    <button type="button" onclick="window.submitPayment()" 
+                            style="width: 100%; padding: 15px; background: #0369a1; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer;">
+                      دفع \${config.amount / 100} ريال
+                    </button>
+                  \`;
+                  
+                  // Format card number
+                  const cardInput = element.querySelector('#card-number');
+                  cardInput.addEventListener('input', function(e) {
+                    const value = e.target.value.replace(/\\D/g, '');
+                    const formatted = value.replace(/(\\d{4})/g, '$1 ').trim();
+                    e.target.value = formatted;
+                  });
+                  
+                  // Submit payment function
+                  window.submitPayment = async function() {
+                    console.log('💳 Submitting payment...');
+                    
+                    const cardNumber = element.querySelector('#card-number').value.replace(/\\s/g, '');
+                    const cardMonth = element.querySelector('#card-month').value;
+                    const cardYear = element.querySelector('#card-year').value;
+                    const cardCvc = element.querySelector('#card-cvc').value;
+                    const cardName = element.querySelector('#card-name').value;
+                    
+                    if (!cardNumber || !cardMonth || !cardYear || !cardCvc || !cardName) {
+                      alert('يرجى ملء جميع الحقول المطلوبة');
+                      return;
+                    }
+                    
+                    try {
+                      // Create payment with Moyasar API
+                      const paymentData = {
+                        amount: config.amount,
+                        currency: config.currency,
+                        description: config.description,
+                        publishable_api_key: config.publishable_api_key,
+                        callback_url: config.callback_url,
+                        source: {
+                          type: 'creditcard',
+                          name: cardName,
+                          number: cardNumber,
+                          month: cardMonth,
+                          year: cardYear,
+                          cvc: cardCvc
+                        },
+                        metadata: config.metadata || {}
+                      };
+                      
+                      console.log('🚀 Creating payment with Moyasar...');
+                      
+                      const response = await fetch('https://api.moyasar.com/v1/payments', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': 'Basic ' + btoa(config.publishable_api_key + ':')
+                        },
+                        body: JSON.stringify(paymentData)
+                      });
+                      
+                      const result = await response.json();
+                      
+                      if (result.id) {
+                        console.log('✅ Payment created:', result);
+                        
+                        if (result.source && result.source.transaction_url) {
+                          // Redirect to 3D Secure
+                          window.location.href = result.source.transaction_url;
+                        } else {
+                          // Direct success
+                          window.location.href = config.callback_url + '?id=' + result.id + '&status=paid';
+                        }
+                      } else {
+                        console.error('❌ Payment failed:', result);
+                        alert('فشل في معالجة الدفع: ' + (result.message || 'خطأ غير معروف'));
+                      }
+                      
+                    } catch (error) {
+                      console.error('❌ Payment error:', error);
+                      alert('حدث خطأ في معالجة الدفع. يرجى المحاولة مرة أخرى.');
+                    }
                   };
                   
-                  script.onerror = () => {
-                    clearTimeout(timeout);
-                    reject(new Error('Failed to load from: ' + url));
-                  };
-                });
-                
-                return; // Success, exit loop
-                
-              } catch (error) {
-                console.log(`❌ Failed to load from ${url}:`, error);
-                continue; // Try next CDN
-              }
-            }
+                  console.log('✅ Moyasar form created successfully');
+                }
+              };
+            `;
             
-            throw new Error('All CDN attempts failed');
+            document.head.appendChild(moyasarScript);
+            console.log('✅ Moyasar loaded successfully');
           };
           
           await loadMoyasar();
