@@ -3,13 +3,13 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { CheckCircle, XCircle, ArrowLeft, Download, Phone, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../hooks/useLanguage';
+import { generatePDFReceipt } from '../utils/pdfReceipt';
 
 interface PaymentResult {
   status: 'success' | 'failed' | 'pending' | 'loading';
   paymentId?: string;
   amount?: number;
   currency?: string;
-  message?: string;
   customerName?: string;
   serviceType?: string;
 }
@@ -17,6 +17,7 @@ interface PaymentResult {
 const PaymentCallback = () => {
   const [searchParams] = useSearchParams();
   const [paymentResult, setPaymentResult] = useState<PaymentResult>({ status: 'loading' });
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const { t } = useTranslation();
   const { currentLanguage } = useLanguage();
 
@@ -48,7 +49,6 @@ const PaymentCallback = () => {
         paymentId: paymentId || undefined,
         amount: amount ? parseFloat(amount) / 100 : undefined, // Convert from halalas
         currency,
-        message: t('payment_callback.success_message'),
         customerName: customerName || undefined,
         serviceType: serviceType || undefined,
       });
@@ -56,7 +56,6 @@ const PaymentCallback = () => {
       setPaymentResult({
         status: 'failed',
         paymentId: paymentId || undefined,
-        message: message || t('payment_callback.failed_message'),
         customerName: customerName || undefined,
         serviceType: serviceType || undefined,
       });
@@ -64,14 +63,12 @@ const PaymentCallback = () => {
       setPaymentResult({
         status: 'pending',
         paymentId: paymentId || undefined,
-        message: t('payment_callback.pending_message'),
         customerName: customerName || undefined,
         serviceType: serviceType || undefined,
       });
     } else {
       setPaymentResult({
         status: 'failed',
-        message: t('payment_callback.failed_message'),
       });
     }
   }, [searchParams]);
@@ -102,6 +99,19 @@ const PaymentCallback = () => {
     }
   };
 
+  const getStatusMessage = () => {
+    switch (paymentResult.status) {
+      case 'success':
+        return t('payment_callback.success_message');
+      case 'failed':
+        return t('payment_callback.failed_message');
+      case 'pending':
+        return t('payment_callback.pending_message');
+      default:
+        return t('payment_callback.loading_message');
+    }
+  };
+
   const getStatusColor = () => {
     switch (paymentResult.status) {
       case 'success':
@@ -128,49 +138,32 @@ const PaymentCallback = () => {
     }
   };
 
-  const downloadReceipt = () => {
-    if (!paymentResult.paymentId) return;
+  const downloadReceipt = async () => {
+    if (!paymentResult.paymentId || isGeneratingPDF) return;
     
-    // Create receipt content
-    const receiptContent = `
-الشوامخ للهجرة والتأشيرات
-Shawamek Visa Immigration
-
-إيصال دفع / Payment Receipt
-===========================================
-
-رقم المعاملة / Transaction ID: ${paymentResult.paymentId}
-المبلغ / Amount: ${paymentResult.amount} ${paymentResult.currency}
-التاريخ / Date: ${new Date().toLocaleString()}
-الحالة / Status: ${paymentResult.status === 'success' ? 'مدفوع / Paid' : 'غير مدفوع / Not Paid'}
-
-${paymentResult.customerName ? `اسم العميل / Customer: ${paymentResult.customerName}` : ''}
-${paymentResult.serviceType ? `نوع الخدمة / Service: ${paymentResult.serviceType}` : ''}
-
-===========================================
-
-شكراً لك لاختيار الشوامخ للهجرة والتأشيرات
-Thank you for choosing Shawamek Visa Immigration
-
-للاستفسارات / For inquiries:
-الهاتف / Phone: +966501367513
-البريد الإلكتروني / Email: info@alshawamekhimmigration.com
-
-===========================================
-تم إنشاء هذا الإيصال في: ${new Date().toLocaleString()}
-This receipt was generated on: ${new Date().toLocaleString()}
-    `;
+    setIsGeneratingPDF(true);
     
-    // Create and download file
-    const blob = new Blob([receiptContent], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `receipt_${paymentResult.paymentId}_${new Date().toISOString().split('T')[0]}.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    try {
+      const paymentData = {
+        paymentId: paymentResult.paymentId,
+        amount: paymentResult.amount || 0,
+        currency: paymentResult.currency || 'SAR',
+        customerName: paymentResult.customerName,
+        serviceType: paymentResult.serviceType,
+        date: new Date().toLocaleDateString(currentLanguage === 'ar' ? 'ar-SA' : 'en-US'),
+        language: currentLanguage as 'ar' | 'en'
+      };
+      
+      await generatePDFReceipt(paymentData);
+    } catch (error) {
+      console.error('Error generating PDF receipt:', error);
+      // Fallback to alert if PDF generation fails
+      alert(currentLanguage === 'ar' ? 
+        'خطأ في إنشاء الإيصال. يرجى المحاولة مرة أخرى.' : 
+        'Error generating receipt. Please try again.');
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   return (
@@ -198,7 +191,7 @@ This receipt was generated on: ${new Date().toLocaleString()}
 
           {/* Status Message */}
           <p className="text-gray-700 text-lg mb-6">
-            {paymentResult.message}
+            {getStatusMessage()}
           </p>
 
           {/* Payment Details */}
@@ -246,10 +239,20 @@ This receipt was generated on: ${new Date().toLocaleString()}
               <>
                 <button 
                   onClick={downloadReceipt}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
+                  disabled={isGeneratingPDF}
+                  className={`w-full ${isGeneratingPDF ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center`}
                 >
-                  <Download size={20} className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2' : ''}`} />
-                  {t('payment_callback.download_receipt')}
+                  {isGeneratingPDF ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      {currentLanguage === 'ar' ? 'جاري إنشاء الإيصال...' : 'Generating Receipt...'}
+                    </>
+                  ) : (
+                    <>
+                      <Download size={20} className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2' : ''}`} />
+                      {t('payment_callback.download_receipt')}
+                    </>
+                  )}
                 </button>
                 <Link
                   to="/"
@@ -302,8 +305,8 @@ This receipt was generated on: ${new Date().toLocaleString()}
                 <span>{t('payment_callback.next_steps.team_contact')}</span>
               </div>
               <div className="flex items-start">
-                <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={20} />
-                <span>You can track your application status through your email</span>
+                <CheckCircle className={`text-green-500 mr-3 mt-0.5 flex-shrink-0 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-3' : ''}`} size={20} />
+                <span>{t('payment_callback.next_steps.email_confirmation')}</span>
               </div>
             </div>
           </div>
@@ -311,18 +314,18 @@ This receipt was generated on: ${new Date().toLocaleString()}
 
         {/* Support Contact */}
         <div className="bg-blue-50 rounded-xl p-6 mt-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-4">Need Help?</h3>
+          <h3 className="text-lg font-semibold text-blue-900 mb-4">{currentLanguage === 'ar' ? 'هل تحتاج مساعدة؟' : 'Need Help?'}</h3>
           <div className="space-y-2 text-sm text-blue-800">
             <div className="flex items-center">
-              <Mail className="mr-2" size={16} />
-              <span>info@alshawamekhimmigration.com</span>
+              <Mail className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2' : ''}`} size={16} />
+              <span>info@shawmekimmigration.com</span>
             </div>
             <div className="flex items-center">
-              <Phone className="mr-2" size={16} />
+              <Phone className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2' : ''}`} size={16} />
               <span>+966501367513</span>
             </div>
             <p className="pt-2 text-xs text-blue-600">
-              Our support team is available 24/7 to assist you.
+              {t('payment_callback.support_message')}
             </p>
           </div>
         </div>
