@@ -5,9 +5,15 @@ export const useLanguage = () => {
   const { i18n } = useTranslation();
 
   useEffect(() => {
-    // Set initial language from localStorage or default to 'en'
-    const savedLanguage = localStorage.getItem('preferredLanguage') || 'en';
-    if (savedLanguage !== i18n.language) {
+    // Force English as default language if no preference is saved
+    const savedLanguage = localStorage.getItem('preferredLanguage');
+    
+    if (!savedLanguage) {
+      // First time visitor - set English as default
+      i18n.changeLanguage('en');
+      localStorage.setItem('preferredLanguage', 'en');
+    } else if (savedLanguage !== i18n.language) {
+      // User has a saved preference
       i18n.changeLanguage(savedLanguage);
     }
 

@@ -2164,10 +2164,7 @@ i18n
     fallbackLng: 'en',
     defaultNS: 'common',
     
-    detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
-      caches: ['localStorage'],
-    },
+    // Language detection disabled - using useLanguage hook instead
 
     interpolation: {
       escapeValue: false,
