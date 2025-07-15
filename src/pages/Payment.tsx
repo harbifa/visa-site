@@ -5,6 +5,25 @@ import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../hooks/useLanguage';
 import { isProductionReady, paymentConfig } from '../config/payment';
 
+// Extend window interface for Moyasar
+declare global {
+  interface Window {
+    Moyasar: {
+      init: (config: {
+        element: string;
+        amount: number;
+        currency: string;
+        description: string;
+        publishable_api_key: string;
+        callback_url: string;
+        methods: string[];
+        metadata: Record<string, string>;
+        on_completed: (payment: { id: string; status: string }) => void;
+      }) => void;
+    };
+  }
+}
+
 const Payment = () => {
   const { t } = useTranslation();
   const { currentLanguage } = useLanguage();
@@ -71,47 +90,115 @@ const Payment = () => {
           return;
         }
         
-        // PRODUCTION: Redirect to Moyasar Checkout
+        // PRODUCTION: Use Moyasar Form Library
         try {
-          console.log('🚀 Redirecting to Moyasar Checkout...');
+          console.log('🚀 Initializing Moyasar Form...');
           
-          // Create form for Moyasar checkout
-          const form = document.createElement('form');
-          form.method = 'POST';
-          form.action = 'https://checkout.moyasar.com/pay';
-          form.target = '_self';
-          
-          // Payment data
-          const paymentData = {
-            'publishable_api_key': paymentConfig.publishableKey,
-            'amount': (amount * 100).toString(),
-            'currency': 'SAR',
-            'description': `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
-            'callback_url': `${window.location.origin}/payment/callback`,
-            'source[type]': 'creditcard',
-            'metadata[customer_name]': formData.name,
-            'metadata[customer_email]': formData.email,
-            'metadata[customer_phone]': formData.phone,
-            'metadata[service_type]': formData.serviceType,
+          // Load Moyasar CSS and JS if not already loaded
+          const loadMoyasarResources = async () => {
+            // Check if Moyasar is already loaded
+            if (typeof window.Moyasar !== 'undefined') {
+              return;
+            }
+            
+            // Load CSS
+            const cssLink = document.createElement('link');
+            cssLink.rel = 'stylesheet';
+            cssLink.href = 'https://unpkg.com/[email protected]/dist/moyasar.css';
+            document.head.appendChild(cssLink);
+            
+            // Load JS
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/[email protected]/dist/moyasar.umd.js';
+            document.head.appendChild(script);
+            
+            // Wait for script to load
+            await new Promise<void>((resolve) => {
+              script.onload = () => resolve();
+            });
           };
           
-          // Add hidden inputs
-          Object.entries(paymentData).forEach(([key, value]) => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = key;
-            input.value = value;
-            form.appendChild(input);
+          await loadMoyasarResources();
+          
+          // Create modal for Moyasar form
+          const modal = document.createElement('div');
+          modal.id = 'moyasar-modal';
+          modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            font-family: Arial, sans-serif;
+          `;
+          
+          const modalContent = document.createElement('div');
+          modalContent.style.cssText = `
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+          `;
+          
+          modalContent.innerHTML = `
+            <div style="text-align: center; margin-bottom: 20px;">
+              <h2 style="color: #333; margin: 0 0 10px 0;">دفع آمن - ميسر</h2>
+              <p style="color: #666; margin: 0;">المبلغ: ${amount} ريال سعودي</p>
+              <p style="color: #666; margin: 5px 0 0 0; font-size: 14px;">الخدمة: ${formData.serviceType}</p>
+            </div>
+            
+            <div class="mysr-form"></div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+              <button type="button" id="cancelPayment" 
+                      style="padding: 12px 24px; background: #ccc; color: #333; border: none; border-radius: 5px; cursor: pointer;">
+                إلغاء الدفع
+              </button>
+            </div>
+          `;
+          
+          modal.appendChild(modalContent);
+          document.body.appendChild(modal);
+          
+          // Initialize Moyasar Form
+          window.Moyasar.init({
+            element: '.mysr-form',
+            amount: amount * 100, // Convert to halalas
+            currency: 'SAR',
+            description: `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
+            publishable_api_key: paymentConfig.publishableKey,
+            callback_url: `${window.location.origin}/payment/callback`,
+            methods: ['creditcard'],
+            metadata: {
+              customer_name: formData.name,
+              customer_email: formData.email,
+              customer_phone: formData.phone,
+              service_type: formData.serviceType,
+            },
+            on_completed: async function (payment: { id: string; status: string }) {
+              console.log('✅ Payment completed:', payment);
+              // The user will be redirected to callback_url automatically
+            },
           });
           
-          // Add form to body and submit
-          document.body.appendChild(form);
-          form.submit();
+          // Cancel button
+          document.getElementById('cancelPayment')?.addEventListener('click', () => {
+            document.body.removeChild(modal);
+            setIsProcessing(false);
+          });
           
-          console.log('✅ Redirecting to Moyasar Checkout...');
+          console.log('✅ Moyasar Form initialized');
           
         } catch (error) {
-          console.error('❌ Payment redirection failed:', error);
+          console.error('❌ Moyasar Form initialization failed:', error);
           setPaymentError(t('payment.errors.connection_error'));
         }
       } else {
