@@ -94,76 +94,107 @@ const Payment = () => {
         try {
           console.log('🚀 Starting Moyasar payment flow...');
           
-          // Create and load Moyasar resources
-          const script = document.createElement('script');
-          script.src = 'https://unpkg.com/[email protected]/dist/moyasar.umd.js';
-          
-          const cssLink = document.createElement('link');
-          cssLink.rel = 'stylesheet';
-          cssLink.href = 'https://unpkg.com/[email protected]/dist/moyasar.css';
-          
-          document.head.appendChild(cssLink);
-          document.head.appendChild(script);
-          
-          // Wait for script to load
-          script.onload = () => {
-            console.log('✅ Moyasar loaded successfully');
+          // Function to load Moyasar with fallback CDNs
+          const loadMoyasar = async () => {
+            const cdnUrls = [
+              'https://unpkg.com/[email protected]/dist/moyasar.umd.js',
+              'https://cdn.jsdelivr.net/npm/[email protected]/dist/moyasar.umd.js',
+              'https://cdnjs.cloudflare.com/ajax/libs/moyasar/1.12.0/moyasar.umd.js'
+            ];
             
-            // Create payment modal
-            const modal = document.createElement('div');
-            modal.innerHTML = `
-              <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 10000;">
-                <div style="background: white; padding: 30px; border-radius: 10px; max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                  <div style="text-align: center; margin-bottom: 20px;">
-                    <h2 style="color: #333; margin: 0 0 10px 0;">دفع آمن - ميسر</h2>
-                    <p style="color: #666; margin: 0;">المبلغ: ${amount} ريال سعودي</p>
-                    <p style="color: #666; margin: 5px 0 0 0; font-size: 14px;">الخدمة: ${formData.serviceType}</p>
-                  </div>
-                  <div class="mysr-form"></div>
-                  <div style="text-align: center; margin-top: 20px;">
-                    <button onclick="this.closest('div').remove(); document.querySelector('button[type=submit]').disabled = false;" 
-                            style="padding: 12px 24px; background: #ccc; color: #333; border: none; border-radius: 5px; cursor: pointer;">
-                      إلغاء الدفع
-                    </button>
-                  </div>
+            for (const url of cdnUrls) {
+              try {
+                console.log(`🔄 Trying to load from: ${url}`);
+                
+                const script = document.createElement('script');
+                script.src = url;
+                
+                const cssLink = document.createElement('link');
+                cssLink.rel = 'stylesheet';
+                cssLink.href = url.replace('.umd.js', '.css');
+                
+                document.head.appendChild(cssLink);
+                document.head.appendChild(script);
+                
+                // Wait for script to load with timeout
+                await new Promise<void>((resolve, reject) => {
+                  const timeout = setTimeout(() => {
+                    reject(new Error('Timeout loading Moyasar'));
+                  }, 5000);
+                  
+                  script.onload = () => {
+                    clearTimeout(timeout);
+                    console.log('✅ Moyasar loaded successfully from:', url);
+                    resolve();
+                  };
+                  
+                  script.onerror = () => {
+                    clearTimeout(timeout);
+                    reject(new Error('Failed to load from: ' + url));
+                  };
+                });
+                
+                return; // Success, exit loop
+                
+              } catch (error) {
+                console.log(`❌ Failed to load from ${url}:`, error);
+                continue; // Try next CDN
+              }
+            }
+            
+            throw new Error('All CDN attempts failed');
+          };
+          
+          await loadMoyasar();
+          
+          // Create payment modal
+          const modal = document.createElement('div');
+          modal.innerHTML = `
+            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 10000;">
+              <div style="background: white; padding: 30px; border-radius: 10px; max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <div style="text-align: center; margin-bottom: 20px;">
+                  <h2 style="color: #333; margin: 0 0 10px 0;">دفع آمن - ميسر</h2>
+                  <p style="color: #666; margin: 0;">المبلغ: ${amount} ريال سعودي</p>
+                  <p style="color: #666; margin: 5px 0 0 0; font-size: 14px;">الخدمة: ${formData.serviceType}</p>
+                </div>
+                <div class="mysr-form"></div>
+                <div style="text-align: center; margin-top: 20px;">
+                  <button onclick="this.closest('div').remove(); document.querySelector('button[type=submit]').disabled = false;" 
+                          style="padding: 12px 24px; background: #ccc; color: #333; border: none; border-radius: 5px; cursor: pointer;">
+                    إلغاء الدفع
+                  </button>
                 </div>
               </div>
-            `;
-            
-            document.body.appendChild(modal);
-            
-            // Initialize Moyasar form
-            window.Moyasar.init({
-              element: '.mysr-form',
-              amount: amount * 100,
-              currency: 'SAR',
-              description: `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
-              publishable_api_key: paymentConfig.publishableKey,
-              callback_url: `${window.location.origin}/payment/callback`,
-              methods: ['creditcard'],
-              metadata: {
-                customer_name: formData.name,
-                customer_email: formData.email,
-                customer_phone: formData.phone,
-                service_type: formData.serviceType,
-              },
-              on_completed: function (payment: { id: string; status: string }) {
-                console.log('✅ Payment completed:', payment);
-              },
-            });
-            
-            console.log('✅ Moyasar form initialized');
-          };
+            </div>
+          `;
           
-          script.onerror = () => {
-            console.error('❌ Failed to load Moyasar');
-            setPaymentError('فشل في تحميل نموذج الدفع. يرجى إعادة المحاولة أو التواصل مع الدعم الفني.');
-            setIsProcessing(false);
-          };
+          document.body.appendChild(modal);
+          
+          // Initialize Moyasar form
+          window.Moyasar.init({
+            element: '.mysr-form',
+            amount: amount * 100,
+            currency: 'SAR',
+            description: `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
+            publishable_api_key: paymentConfig.publishableKey,
+            callback_url: `${window.location.origin}/payment/callback`,
+            methods: ['creditcard'],
+            metadata: {
+              customer_name: formData.name,
+              customer_email: formData.email,
+              customer_phone: formData.phone,
+              service_type: formData.serviceType,
+            },
+            on_completed: function (payment: { id: string; status: string }) {
+              console.log('✅ Payment completed:', payment);
+            },
+          });
+          
+          console.log('✅ Moyasar form initialized');
           
         } catch (error) {
           console.error('❌ Payment initialization failed:', error);
-          setPaymentError('حدث خطأ في تهيئة الدفع. يرجى المحاولة مرة أخرى.');
+          setPaymentError('فشل في تحميل نموذج الدفع. قد يكون هناك مشكلة في الاتصال بالإنترنت. يرجى المحاولة مرة أخرى.');
           setIsProcessing(false);
         }
       } else {
