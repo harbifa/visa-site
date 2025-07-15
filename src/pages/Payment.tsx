@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CreditCard, ArrowLeft, ExternalLink, Shield, AlertTriangle } from 'lucide-react';
+import { CreditCard, ArrowLeft, ExternalLink, Shield, AlertTriangle, Lock, CheckCircle } from 'lucide-react';
 import { isProductionReady, paymentConfig } from '../config/payment';
 
 // Extend window interface for Moyasar
@@ -23,7 +23,6 @@ declare global {
 }
 
 const Payment = () => {
-  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -37,6 +36,16 @@ const Payment = () => {
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+
+  // Card form state
+  const [cardData, setCardData] = useState({
+    cardNumber: '',
+    expiryMonth: '',
+    expiryYear: '',
+    cvv: '',
+    cardholderName: ''
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,12 +56,14 @@ const Payment = () => {
       // Validate form data
       if (!formData.name || !formData.email || !formData.phone || !formData.amount || !formData.serviceType) {
         setPaymentError('Please fill in all required fields');
+        setIsProcessing(false);
         return;
       }
 
       const amount = parseFloat(formData.amount);
       if (isNaN(amount) || amount <= 0) {
         setPaymentError('Please enter a valid amount');
+        setIsProcessing(false);
         return;
       }
 
@@ -60,9 +71,36 @@ const Payment = () => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
         setPaymentError('Please enter a valid email address');
+        setIsProcessing(false);
         return;
       }
 
+      // Show payment modal
+      setShowPaymentModal(true);
+      setIsProcessing(false);
+      
+    } catch (error) {
+      console.error('❌ Form validation error:', error);
+      setPaymentError('An error occurred while processing your request. Please try again.');
+      setIsProcessing(false);
+    }
+  };
+
+  const handleCardSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsProcessing(true);
+    setPaymentError(null);
+
+    try {
+      // Validate card data
+      if (!cardData.cardNumber || !cardData.expiryMonth || !cardData.expiryYear || !cardData.cvv || !cardData.cardholderName) {
+        setPaymentError('Please fill in all card details');
+        setIsProcessing(false);
+        return;
+      }
+
+      const amount = parseFloat(formData.amount);
+      
       console.log('🚀 Creating Moyasar payment...', {
         customer: formData.name,
         service: formData.serviceType,
@@ -76,84 +114,26 @@ const Payment = () => {
         // Check if production is properly configured
         if (!isProductionReady()) {
           setPaymentError('Payment system is not configured properly. Please contact support.');
+          setIsProcessing(false);
           return;
         }
         
-        // PRODUCTION: Use Moyasar
+        // PRODUCTION: Create payment with Moyasar API
         try {
-          console.log('🚀 Starting Moyasar payment flow...');
-          
-          // Load Moyasar from official source
-          const loadMoyasar = async () => {
-            if (window.Moyasar) {
-              console.log('✅ Moyasar already loaded');
-              return;
-            }
-            
-            const script = document.createElement('script');
-            script.src = 'https://cdn.moyasar.com/mpf/1.14.0/moyasar.js';
-            script.async = true;
-            
-            return new Promise<void>((resolve, reject) => {
-              script.onload = () => {
-                console.log('✅ Moyasar loaded successfully');
-                resolve();
-              };
-              script.onerror = () => {
-                console.error('❌ Failed to load Moyasar');
-                reject(new Error('Failed to load Moyasar'));
-              };
-              document.head.appendChild(script);
-            });
-          };
-          
-          await loadMoyasar();
-          
-          // Create payment modal
-          const modal = document.createElement('div');
-          modal.innerHTML = `
-            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 10000;">
-              <div style="background: white; padding: 40px; border-radius: 15px; max-width: 500px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
-                <div style="text-align: center; margin-bottom: 30px;">
-                  <div style="display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; background: #0369a1; border-radius: 50%; margin-bottom: 15px;">
-                    <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
-                      <path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12zm4.64 0l1.41-1.41L10 12.54l6.36-6.36 1.41 1.41L10 15.36 6.64 12z"/>
-                    </svg>
-                  </div>
-                  <h2 style="color: #1f2937; margin: 0 0 10px 0; font-size: 24px; font-weight: 600;">Secure Payment</h2>
-                  <p style="color: #6b7280; margin: 0; font-size: 16px;">Amount: ${amount} SAR</p>
-                  <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 14px;">Service: ${formData.serviceType}</p>
-                </div>
-                <div class="mysr-form"></div>
-                <div style="text-align: center; margin-top: 25px;">
-                  <button onclick="this.closest('div').remove(); document.querySelector('button[type=submit]').disabled = false;" 
-                          style="padding: 12px 30px; background: #e5e7eb; color: #374151; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s;">
-                    Cancel Payment
-                  </button>
-                </div>
-                <div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0369a1;">
-                  <div style="display: flex; align-items: center; color: #0369a1; font-size: 14px;">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;">
-                      <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-                    </svg>
-                    <span>Your payment is secured with SSL encryption</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
-          
-          document.body.appendChild(modal);
-          
-          // Initialize Moyasar form
-          window.Moyasar.init({
-            element: '.mysr-form',
-            amount: amount * 100,
+          const paymentData = {
+            amount: amount * 100, // Convert to halalas
             currency: 'SAR',
             description: `Payment for ${formData.serviceType} - ${formData.name}`,
             publishable_api_key: paymentConfig.publishableKey,
             callback_url: `${window.location.origin}/payment-callback`,
-            methods: ['creditcard'],
+            source: {
+              type: 'creditcard',
+              name: cardData.cardholderName,
+              number: cardData.cardNumber.replace(/\s/g, ''),
+              month: cardData.expiryMonth,
+              year: cardData.expiryYear,
+              cvc: cardData.cvv
+            },
             metadata: {
               customer_name: formData.name,
               customer_email: formData.email,
@@ -162,13 +142,36 @@ const Payment = () => {
               billing_address: formData.address,
               billing_city: formData.city,
               additional_info: formData.description || 'No additional information'
-            },
-            on_completed: (payment) => {
-              console.log('✅ Payment completed:', payment);
-              modal.remove();
-              window.location.href = `/payment-callback?id=${payment.id}&status=${payment.status}`;
             }
+          };
+
+          console.log('🚀 Creating payment with Moyasar...');
+          
+          const response = await fetch('https://api.moyasar.com/v1/payments', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Basic ' + btoa(paymentConfig.publishableKey + ':')
+            },
+            body: JSON.stringify(paymentData)
           });
+
+          const result = await response.json();
+          
+          if (result.id) {
+            console.log('✅ Payment created:', result);
+            
+            if (result.source && result.source.transaction_url) {
+              // Redirect to 3D Secure
+              window.location.href = result.source.transaction_url;
+            } else {
+              // Direct success
+              window.location.href = `/payment-callback?id=${result.id}&status=paid`;
+            }
+          } else {
+            console.error('❌ Payment failed:', result);
+            setPaymentError(`Payment failed: ${result.message || 'Unknown error'}`);
+          }
           
         } catch (error) {
           console.error('❌ Payment error:', error);
@@ -176,7 +179,10 @@ const Payment = () => {
         }
       } else {
         // DEMO MODE: Show demo message
-        alert('🎯 DEMO MODE: Payment simulation completed successfully!\\n\\nIn production, this would process a real payment through Moyasar.');
+        setTimeout(() => {
+          setShowPaymentModal(false);
+          alert('🎯 DEMO MODE: Payment simulation completed successfully!\n\nIn production, this would process a real payment through Moyasar.');
+        }, 2000);
       }
       
     } catch (error) {
@@ -190,6 +196,39 @@ const Payment = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCardInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
+    let formattedValue = value;
+    
+    // Format card number
+    if (name === 'cardNumber') {
+      formattedValue = value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+      if (formattedValue.length > 19) formattedValue = formattedValue.slice(0, 19);
+    }
+    
+    // Format expiry month
+    if (name === 'expiryMonth') {
+      formattedValue = value.replace(/\D/g, '');
+      if (formattedValue.length > 2) formattedValue = formattedValue.slice(0, 2);
+      if (parseInt(formattedValue) > 12) formattedValue = '12';
+    }
+    
+    // Format expiry year
+    if (name === 'expiryYear') {
+      formattedValue = value.replace(/\D/g, '');
+      if (formattedValue.length > 4) formattedValue = formattedValue.slice(0, 4);
+    }
+    
+    // Format CVV
+    if (name === 'cvv') {
+      formattedValue = value.replace(/\D/g, '');
+      if (formattedValue.length > 3) formattedValue = formattedValue.slice(0, 3);
+    }
+    
+    setCardData(prev => ({ ...prev, [name]: formattedValue }));
   };
 
   return (
@@ -236,7 +275,7 @@ const Payment = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                         placeholder="Enter your full name"
                         required
                       />
@@ -250,7 +289,7 @@ const Payment = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                         placeholder="Enter your email address"
                         required
                       />
@@ -264,7 +303,7 @@ const Payment = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                         placeholder="Enter your phone number"
                         required
                       />
@@ -278,7 +317,7 @@ const Payment = () => {
                         name="amount"
                         value={formData.amount}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                         placeholder="Enter amount in Saudi Riyal"
                         min="1"
                         step="0.01"
@@ -300,7 +339,7 @@ const Payment = () => {
                         name="serviceType"
                         value={formData.serviceType}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                         required
                       >
                         <option value="">Select Service Type</option>
@@ -324,7 +363,7 @@ const Payment = () => {
                         value={formData.description}
                         onChange={handleInputChange}
                         rows={3}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                         placeholder="Any additional information about your service request..."
                       />
                     </div>
@@ -344,7 +383,7 @@ const Payment = () => {
                         name="address"
                         value={formData.address}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                         placeholder="Enter your address"
                         required
                       />
@@ -358,7 +397,7 @@ const Payment = () => {
                         name="city"
                         value={formData.city}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                         placeholder="Enter your city"
                         required
                       />
@@ -368,7 +407,7 @@ const Payment = () => {
 
                 {/* Error Message */}
                 {paymentError && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
                     <div className="flex items-center">
                       <AlertTriangle className="w-5 h-5 text-red-500 mr-3" />
                       <span className="text-red-700">{paymentError}</span>
@@ -377,13 +416,13 @@ const Payment = () => {
                 )}
 
                 {/* Security Info */}
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
                   <div className="flex items-center">
                     <Shield className="w-5 h-5 text-blue-600 mr-3" />
                     <div>
                       <h4 className="font-medium text-blue-900">Secure Payment</h4>
                       <p className="text-sm text-blue-700">
-                        After submitting this form, you will be redirected to Moyasar's secure payment gateway where you can complete your payment using various payment methods.
+                        After clicking "Proceed to Payment", you will enter your card details in a secure form.
                       </p>
                     </div>
                   </div>
@@ -393,7 +432,7 @@ const Payment = () => {
                 <button
                   type="submit"
                   disabled={isProcessing}
-                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center"
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl"
                 >
                   {isProcessing ? (
                     <>
@@ -403,7 +442,7 @@ const Payment = () => {
                   ) : (
                     <>
                       <ExternalLink className="w-5 h-5 mr-2" />
-                      Proceed to Moyasar Payment
+                      Proceed to Payment
                     </>
                   )}
                 </button>
@@ -413,6 +452,28 @@ const Payment = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Payment Summary */}
+            {formData.amount && (
+              <div className="bg-white rounded-2xl shadow-xl p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Payment Summary</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Service</span>
+                    <span className="font-medium">{formData.serviceType || 'Not selected'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Amount</span>
+                    <span className="font-medium text-green-600">{formData.amount} SAR</span>
+                  </div>
+                  <hr className="my-2" />
+                  <div className="flex justify-between text-lg font-semibold">
+                    <span>Total</span>
+                    <span className="text-green-600">{formData.amount} SAR</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Help Section */}
             <div className="bg-white rounded-2xl shadow-xl p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Need Help?</h3>
@@ -435,31 +496,31 @@ const Payment = () => {
             <div className="bg-white rounded-2xl shadow-xl p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Accepted Payment Methods</h3>
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center justify-center p-3 border border-gray-200 rounded-lg">
+                <div className="flex items-center justify-center p-3 border-2 border-gray-200 rounded-lg">
                   <div className="w-8 h-5 bg-red-600 rounded text-white text-xs flex items-center justify-center font-bold">
                     MC
                   </div>
                   <span className="ml-2 text-sm text-gray-600">Mastercard</span>
                 </div>
-                <div className="flex items-center justify-center p-3 border border-gray-200 rounded-lg">
+                <div className="flex items-center justify-center p-3 border-2 border-gray-200 rounded-lg">
                   <div className="w-8 h-5 bg-blue-600 rounded text-white text-xs flex items-center justify-center font-bold">
                     V
                   </div>
                   <span className="ml-2 text-sm text-gray-600">Visa</span>
                 </div>
-                <div className="flex items-center justify-center p-3 border border-gray-200 rounded-lg">
+                <div className="flex items-center justify-center p-3 border-2 border-gray-200 rounded-lg">
                   <div className="w-8 h-5 bg-orange-500 rounded text-white text-xs flex items-center justify-center font-bold">
                     AP
                   </div>
                   <span className="ml-2 text-sm text-gray-600">Apple Pay</span>
                 </div>
-                <div className="flex items-center justify-center p-3 border border-gray-200 rounded-lg">
+                <div className="flex items-center justify-center p-3 border-2 border-gray-200 rounded-lg">
                   <div className="w-8 h-5 bg-blue-500 rounded text-white text-xs flex items-center justify-center font-bold">
                     ST
                   </div>
                   <span className="ml-2 text-sm text-gray-600">STC Pay</span>
                 </div>
-                <div className="flex items-center justify-center p-3 border border-gray-200 rounded-lg">
+                <div className="flex items-center justify-center p-3 border-2 border-gray-200 rounded-lg">
                   <div className="w-8 h-5 bg-purple-600 rounded text-white text-xs flex items-center justify-center font-bold">
                     BT
                   </div>
@@ -473,6 +534,162 @@ const Payment = () => {
           </div>
         </div>
       </div>
+
+      {/* Custom Payment Modal */}
+      {showPaymentModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              {/* Modal Header */}
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full mb-4">
+                  <Lock className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Secure Payment</h2>
+                <p className="text-gray-600">Amount: {formData.amount} SAR</p>
+                <p className="text-sm text-gray-500">Service: {formData.serviceType}</p>
+              </div>
+
+              {/* Card Form */}
+              <form onSubmit={handleCardSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Card Number *
+                  </label>
+                  <input
+                    type="text"
+                    name="cardNumber"
+                    value={cardData.cardNumber}
+                    onChange={handleCardInputChange}
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    placeholder="1234 5678 9012 3456"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Month *
+                    </label>
+                    <input
+                      type="text"
+                      name="expiryMonth"
+                      value={cardData.expiryMonth}
+                      onChange={handleCardInputChange}
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      placeholder="12"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Year *
+                    </label>
+                    <input
+                      type="text"
+                      name="expiryYear"
+                      value={cardData.expiryYear}
+                      onChange={handleCardInputChange}
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      placeholder="2025"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      CVV *
+                    </label>
+                    <input
+                      type="text"
+                      name="cvv"
+                      value={cardData.cvv}
+                      onChange={handleCardInputChange}
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      placeholder="123"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cardholder Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="cardholderName"
+                    value={cardData.cardholderName}
+                    onChange={handleCardInputChange}
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    placeholder="John Doe"
+                    required
+                  />
+                </div>
+
+                {/* Security Notice */}
+                <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-600 mr-3" />
+                    <div>
+                      <h4 className="font-medium text-green-900">SSL Secured</h4>
+                      <p className="text-sm text-green-700">Your payment information is protected with bank-level encryption</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Error Message */}
+                {paymentError && (
+                  <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
+                    <div className="flex items-center">
+                      <AlertTriangle className="w-5 h-5 text-red-500 mr-3" />
+                      <span className="text-red-700">{paymentError}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex gap-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowPaymentModal(false);
+                      setPaymentError(null);
+                    }}
+                    className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 px-4 rounded-lg transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isProcessing}
+                    className="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center shadow-lg"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <Lock className="w-4 h-4 mr-2" />
+                        Pay {formData.amount} SAR
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+
+              {/* Powered by Moyasar */}
+              <div className="text-center mt-6 pt-4 border-t border-gray-200">
+                <p className="text-xs text-gray-500">
+                  Powered by <span className="font-semibold">Moyasar</span> - Secure Payment Gateway
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
