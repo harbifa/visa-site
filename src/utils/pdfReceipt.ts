@@ -9,125 +9,90 @@ interface ReceiptData {
   date: string;
 }
 
-export const generatePaymentReceipt = (data: ReceiptData) => {
+export const generatePaymentReceipt = async (data: ReceiptData) => {
   const doc = new jsPDF();
   
   // Document settings
   const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
   
   // Colors
-  const primaryColor = '#2563eb'; // Blue
-  const textColor = '#374151'; // Gray
-  const lightGrayColor = '#f3f4f6';
+  const primaryBlue = [54, 98, 185];
+  const textDark = [51, 51, 51];
   
   // Calculate VAT (15% Saudi VAT)
   const totalAmount = data.amount;
-  const subtotal = totalAmount / 1.15; // Amount before VAT
-  const vatAmount = totalAmount - subtotal; // VAT amount
+  const subtotal = totalAmount / 1.15;
+  const vatAmount = totalAmount - subtotal;
   
-  // Company Logo and Header
-  doc.setFillColor(primaryColor);
-  doc.rect(0, 0, pageWidth, 60, 'F');
+  // Load and add logo
+  try {
+    const logoResponse = await fetch('/assets/logo.png');
+    const logoBlob = await logoResponse.blob();
+    const logoBase64 = await new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(logoBlob);
+    });
+    
+    // Add logo to header (30x30 pixels)
+    doc.addImage(logoBase64, 'PNG', 20, 5, 30, 20);
+  } catch {
+    console.log('Logo not loaded, continuing without logo');
+  }
   
-  // Company Name
+  // Simple header
+  doc.setFillColor(primaryBlue[0], primaryBlue[1], primaryBlue[2]);
+  doc.rect(0, 0, pageWidth, 30, 'F');
+  
+  // Company name in header (moved to right of logo)
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(24);
+  doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text('Alshawamekh', 20, 30);
+  doc.text('Alshawamekh Visa Immigration', pageWidth / 2, 20, { align: 'center' });
   
-  // Company Subtitle
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Visa Immigration Services', 20, 45);
-  
-  // Receipt Title - Top Right
+  // Receipt title
+  doc.setTextColor(textDark[0], textDark[1], textDark[2]);
   doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
-  doc.text('PAYMENT RECEIPT', pageWidth - 20, 25, { align: 'right' });
+  doc.text('Payment Receipt', pageWidth / 2, 50, { align: 'center' });
   
-  // PAID Badge - Bottom Right of Header
-  doc.setFillColor(34, 197, 94); // Green
-  doc.roundedRect(pageWidth - 60, 35, 40, 15, 3, 3, 'F');
-  doc.setTextColor(255, 255, 255);
+  // Receipt details
   doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text('PAID', pageWidth - 40, 45, { align: 'center' });
-  
-  // Reset text color
-  doc.setTextColor(textColor);
-  
-  // Company Details Section
-  doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  doc.text('Company: Alshawamekh Visa Immigration Services', 20, 80);
-  doc.text('Location: Shawamek, Saudi Arabia', 20, 90);
-  doc.text('Phone: +966501367513', 20, 100);
-  doc.text('Email: info@shawmekimmigration.com', 20, 110);
   
-  // Receipt Information
-  doc.setFontSize(12);
+  let y = 70;
+  doc.text(`Receipt Number: ${data.paymentId}`, 20, y);
+  y += 15;
+  doc.text(`Date: ${data.date}`, 20, y);
+  y += 15;
+  doc.text(`Customer: ${data.customerName}`, 20, y);
+  y += 15;
+  doc.text(`Service: ${data.serviceType}`, 20, y);
+  
+  // Amount breakdown
+  y += 25;
   doc.setFont('helvetica', 'bold');
-  doc.text('Receipt Details:', 20, 140);
+  doc.text('Amount Breakdown:', 20, y);
   
+  y += 15;
   doc.setFont('helvetica', 'normal');
-  doc.text(`Transaction ID: ${data.paymentId}`, 20, 155);
-  doc.text(`Customer Name: ${data.customerName}`, 20, 170);
-  doc.text(`Service Type: ${data.serviceType}`, 20, 185);
-  doc.text(`Date: ${data.date}`, 20, 200);
-  
-  // Payment Details Table
-  const tableStartY = 220;
-  const tableWidth = pageWidth - 40;
-  
-  // Table Header
-  doc.setFillColor(lightGrayColor);
-  doc.rect(20, tableStartY, tableWidth, 15, 'F');
-  
-  doc.setFontSize(12);
+  doc.text(`Subtotal (Before VAT): ${subtotal.toFixed(2)} ${data.currency}`, 20, y);
+  y += 15;
+  doc.text(`VAT (15%): ${vatAmount.toFixed(2)} ${data.currency}`, 20, y);
+  y += 15;
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(textColor);
-  doc.text('Description', 25, tableStartY + 10);
-  doc.text('Amount', pageWidth - 25, tableStartY + 10, { align: 'right' });
-  
-  // Table Rows
-  let currentY = tableStartY + 25;
-  
-  // Service Row
-  doc.setFont('helvetica', 'normal');
-  doc.text(`${data.serviceType} - Service Fee`, 25, currentY);
-  doc.text(`${subtotal.toFixed(2)} ${data.currency}`, pageWidth - 25, currentY, { align: 'right' });
-  
-  currentY += 20;
-  
-  // VAT Row
-  doc.text('VAT (15%)', 25, currentY);
-  doc.text(`${vatAmount.toFixed(2)} ${data.currency}`, pageWidth - 25, currentY, { align: 'right' });
-  
-  currentY += 20;
-  
-  // Total Row (highlighted)
-  doc.setFillColor(primaryColor);
-  doc.rect(20, currentY - 8, tableWidth, 20, 'F');
-  
-  doc.setTextColor(255, 255, 255);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Total Amount', 25, currentY + 5);
-  doc.text(`${totalAmount.toFixed(2)} ${data.currency}`, pageWidth - 25, currentY + 5, { align: 'right' });
+  doc.text(`Total: ${totalAmount.toFixed(2)} ${data.currency}`, 20, y);
   
   // Footer
-  doc.setTextColor(textColor);
-  doc.setFont('helvetica', 'normal');
+  y += 30;
   doc.setFontSize(10);
-  
-  const footerY = pageHeight - 40;
-  doc.text('Thank you for choosing Alshawamekh Visa Immigration Services', pageWidth / 2, footerY, { align: 'center' });
-  doc.text('For any inquiries, please contact us at info@shawmekimmigration.com', pageWidth / 2, footerY + 12, { align: 'center' });
+  doc.setTextColor(primaryBlue[0], primaryBlue[1], primaryBlue[2]);
+  doc.text('Thank you for choosing Alshawamekh!', pageWidth / 2, y, { align: 'center' });
   
   // Generate filename
   const filename = `receipt-${data.paymentId}-${Date.now()}.pdf`;
   
-  // Save the PDF
+  // Save the PDF silently (no alert)
   doc.save(filename);
   
   return filename;

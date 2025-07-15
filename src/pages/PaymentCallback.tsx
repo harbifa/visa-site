@@ -166,7 +166,7 @@ const PaymentCallback = () => {
       };
 
       // Generate and download PDF
-      generatePaymentReceipt(receiptData);
+      await generatePaymentReceipt(receiptData);
       
       // Show success message
       alert(currentLanguage === 'ar' ? 

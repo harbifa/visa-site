@@ -216,16 +216,16 @@ const Payment = () => {
                       console.log('🚀 Creating payment with Moyasar...');
                       
                       const response = await fetch('https://api.moyasar.com/v1/payments', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
                           'Authorization': 'Basic ' + btoa(config.publishable_api_key + ':')
                         },
                         body: JSON.stringify(paymentData)
-                      });
-                      
-                      const result = await response.json();
-                      
+          });
+
+          const result = await response.json();
+          
                       if (result.id) {
                         console.log('✅ Payment created:', result);
                         
@@ -236,7 +236,7 @@ const Payment = () => {
                           // Direct success
                           window.location.href = config.callback_url + '?id=' + result.id + '&status=paid';
                         }
-                      } else {
+          } else {
                         console.error('❌ Payment failed:', result);
                         alert('فشل في معالجة الدفع: ' + (result.message || 'خطأ غير معروف'));
                       }
