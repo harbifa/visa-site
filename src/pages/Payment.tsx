@@ -98,8 +98,11 @@ const Payment = () => {
           const loadMoyasarResources = async () => {
             // Check if Moyasar is already loaded
             if (typeof window.Moyasar !== 'undefined') {
+              console.log('✅ Moyasar already loaded');
               return;
             }
+            
+            console.log('📦 Loading Moyasar resources...');
             
             // Load CSS
             const cssLink = document.createElement('link');
@@ -112,13 +115,41 @@ const Payment = () => {
             script.src = 'https://unpkg.com/[email protected]/dist/moyasar.umd.js';
             document.head.appendChild(script);
             
-            // Wait for script to load
+            // Wait for script to load with timeout
+            await new Promise<void>((resolve, reject) => {
+              const timeout = setTimeout(() => {
+                reject(new Error('Moyasar script loading timeout'));
+              }, 10000); // 10 second timeout
+              
+              script.onload = () => {
+                clearTimeout(timeout);
+                console.log('✅ Moyasar script loaded successfully');
+                resolve();
+              };
+              
+              script.onerror = () => {
+                clearTimeout(timeout);
+                reject(new Error('Moyasar script loading failed'));
+              };
+            });
+            
+            // Wait a bit more for Moyasar to initialize
             await new Promise<void>((resolve) => {
-              script.onload = () => resolve();
+              const checkMoyasar = () => {
+                if (typeof window.Moyasar !== 'undefined') {
+                  console.log('✅ Moyasar object available');
+                  resolve();
+                } else {
+                  setTimeout(checkMoyasar, 100);
+                }
+              };
+              checkMoyasar();
             });
           };
           
           await loadMoyasarResources();
+          
+          console.log('🔨 Creating modal...');
           
           // Create modal for Moyasar form
           const modal = document.createElement('div');
@@ -168,8 +199,35 @@ const Payment = () => {
           modal.appendChild(modalContent);
           document.body.appendChild(modal);
           
-          // Initialize Moyasar Form
-          window.Moyasar.init({
+          console.log('✅ Modal created and added to DOM');
+          
+          // Force modal to be visible
+          modal.style.display = 'flex';
+          
+          // Check if modal is actually visible
+          const modalRect = modal.getBoundingClientRect();
+          console.log('📊 Modal dimensions:', {
+            width: modalRect.width,
+            height: modalRect.height,
+            visible: modalRect.width > 0 && modalRect.height > 0
+          });
+          
+          // Wait for modal to be fully rendered
+          await new Promise<void>((resolve) => {
+            setTimeout(() => {
+              const formElement = document.querySelector('.mysr-form');
+              if (formElement) {
+                console.log('✅ Form element found in DOM');
+                resolve();
+              } else {
+                console.error('❌ Form element not found');
+                resolve();
+              }
+            }, 100);
+          });
+          
+          // Prepare Moyasar config
+          const moyasarConfig = {
             element: '.mysr-form',
             amount: amount * 100, // Convert to halalas
             currency: 'SAR',
@@ -187,19 +245,101 @@ const Payment = () => {
               console.log('✅ Payment completed:', payment);
               // The user will be redirected to callback_url automatically
             },
-          });
+          };
+          
+          console.log('🔧 Moyasar config:', moyasarConfig);
+          
+          // Check if element exists before initializing
+          const formElement = document.querySelector('.mysr-form');
+          if (!formElement) {
+            throw new Error('Form element .mysr-form not found');
+          }
+          
+          // Initialize Moyasar Form
+          try {
+            console.log('🚀 Initializing Moyasar.init...');
+            window.Moyasar.init(moyasarConfig);
+            console.log('✅ Moyasar Form initialized successfully');
+          } catch (moyasarError) {
+            console.error('❌ Moyasar initialization error:', moyasarError);
+            throw new Error(`Moyasar initialization failed: ${moyasarError}`);
+          }
           
           // Cancel button
           document.getElementById('cancelPayment')?.addEventListener('click', () => {
+            console.log('🚫 Payment cancelled by user');
             document.body.removeChild(modal);
             setIsProcessing(false);
           });
           
-          console.log('✅ Moyasar Form initialized');
+          console.log('✅ Payment flow setup completed');
+          
+          // Final check to ensure modal is visible
+          setTimeout(() => {
+            const modalCheck = document.getElementById('moyasar-modal');
+            if (modalCheck && modalCheck.style.display === 'flex') {
+              console.log('✅ Modal is visible and ready');
+            } else {
+              console.error('❌ Modal is not visible after setup');
+              // Try to force show it
+              if (modalCheck) {
+                modalCheck.style.display = 'flex';
+                modalCheck.style.visibility = 'visible';
+                modalCheck.style.opacity = '1';
+              }
+            }
+          }, 500);
           
         } catch (error) {
           console.error('❌ Moyasar Form initialization failed:', error);
-          setPaymentError(t('payment.errors.connection_error'));
+          
+          // Clean up modal if it exists
+          const existingModal = document.getElementById('moyasar-modal');
+          if (existingModal) {
+            document.body.removeChild(existingModal);
+          }
+          
+          // Try fallback approach - direct redirect to Moyasar
+          console.log('🔄 Attempting fallback payment approach...');
+          
+          try {
+            // Create simple form and redirect to Moyasar API
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://api.moyasar.com/v1/payments';
+            form.target = '_blank';
+            
+            const inputs = {
+              'publishable_api_key': paymentConfig.publishableKey,
+              'amount': (amount * 100).toString(),
+              'currency': 'SAR',
+              'description': `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
+              'callback_url': `${window.location.origin}/payment/callback`,
+              'source[type]': 'creditcard',
+              'metadata[customer_name]': formData.name,
+              'metadata[customer_email]': formData.email,
+              'metadata[customer_phone]': formData.phone,
+              'metadata[service_type]': formData.serviceType,
+            };
+            
+            Object.entries(inputs).forEach(([key, value]) => {
+              const input = document.createElement('input');
+              input.type = 'hidden';
+              input.name = key;
+              input.value = value;
+              form.appendChild(input);
+            });
+            
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+            
+            console.log('✅ Fallback payment redirect sent');
+            
+          } catch (fallbackError) {
+            console.error('❌ Fallback payment failed:', fallbackError);
+            setPaymentError(`${t('payment.errors.payment_failed')} يرجى المحاولة مرة أخرى أو التواصل مع الدعم الفني.`);
+          }
         }
       } else {
         // DEMO: Use demo payment page
