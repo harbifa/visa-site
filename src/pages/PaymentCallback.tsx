@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { CheckCircle, XCircle, ArrowLeft, Download, Phone, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../hooks/useLanguage';
-import { generatePDFReceipt } from '../utils/pdfReceipt';
+
 
 interface PaymentResult {
   status: 'success' | 'failed' | 'pending' | 'loading';
@@ -17,7 +17,7 @@ interface PaymentResult {
 const PaymentCallback = () => {
   const [searchParams] = useSearchParams();
   const [paymentResult, setPaymentResult] = useState<PaymentResult>({ status: 'loading' });
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
   const { t } = useTranslation();
   const { currentLanguage } = useLanguage();
 
@@ -139,31 +139,10 @@ const PaymentCallback = () => {
   };
 
   const downloadReceipt = async () => {
-    if (!paymentResult.paymentId || isGeneratingPDF) return;
-    
-    setIsGeneratingPDF(true);
-    
-    try {
-      const paymentData = {
-        paymentId: paymentResult.paymentId,
-        amount: paymentResult.amount || 0,
-        currency: paymentResult.currency || 'SAR',
-        customerName: paymentResult.customerName,
-        serviceType: paymentResult.serviceType,
-        date: new Date().toLocaleDateString(currentLanguage === 'ar' ? 'ar-SA' : 'en-US'),
-        language: currentLanguage as 'ar' | 'en'
-      };
-      
-      await generatePDFReceipt(paymentData);
-    } catch (error) {
-      console.error('Error generating PDF receipt:', error);
-      // Fallback to alert if PDF generation fails
-      alert(currentLanguage === 'ar' ? 
-        'خطأ في إنشاء الإيصال. يرجى المحاولة مرة أخرى.' : 
-        'Error generating receipt. Please try again.');
-    } finally {
-      setIsGeneratingPDF(false);
-    }
+    // PDF feature temporarily disabled
+    alert(currentLanguage === 'ar' ? 
+      'ميزة تحميل الإيصال متوقفة مؤقتاً. سيتم إصلاحها قريباً.' : 
+      'Receipt download feature is temporarily disabled. Will be fixed soon.');
   };
 
   return (
@@ -239,20 +218,10 @@ const PaymentCallback = () => {
               <>
                 <button 
                   onClick={downloadReceipt}
-                  disabled={isGeneratingPDF}
-                  className={`w-full ${isGeneratingPDF ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center`}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
                 >
-                  {isGeneratingPDF ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                      {currentLanguage === 'ar' ? 'جاري إنشاء الإيصال...' : 'Generating Receipt...'}
-                    </>
-                  ) : (
-                    <>
-                      <Download size={20} className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2' : ''}`} />
-                      {t('payment_callback.download_receipt')}
-                    </>
-                  )}
+                  <Download size={20} className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2' : ''}`} />
+                  {t('payment_callback.download_receipt')}
                 </button>
                 <Link
                   to="/"

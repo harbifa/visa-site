@@ -149,88 +149,32 @@ const resources = {
           "redirect_notice": "After submitting this form, you will be redirected to Moyasar's secure payment gateway to complete your payment with your preferred payment method."
         }
       },
-      "payment": {
-        "title": "Pay Online",
-        "subtitle": "Secure payment processing via Moyasar",
-        "back_to_home": "Back to Home",
-        "payment_information": "Payment Information",
-        "personal_information": "Personal Information",
-        "service_details": "Service Details",
-        "billing_address": "Billing Address",
-        "payment_summary": "Payment Summary",
-        "payment_security": "Payment Security",
-        "need_help": "Need Help?",
-        "accepted_payment_methods": "Accepted Payment Methods",
-        "form": {
-          "full_name": "Full Name",
-          "email_address": "Email Address",
-          "phone_number": "Phone Number",
-          "amount": "Amount (SAR)",
-          "service_type": "Service Type",
-          "additional_details": "Additional Details",
-          "address": "Address",
-          "city": "City",
-          "select_service": "Select Service Type",
-          "placeholder_name": "Enter your full name",
-          "placeholder_email": "your.email@example.com",
-          "placeholder_phone": "+966 50 123 4567",
-          "placeholder_amount": "0.00",
-          "placeholder_address": "Enter your address",
-          "placeholder_city": "Enter your city",
-          "placeholder_details": "Any additional information about your service request..."
-        },
-        "services": {
-          "express_entry": "Express Entry Visa",
-          "pnp": "Provincial Nomination Program",
-          "study_visa": "Study Visa",
-          "visit_visa": "Visit Visa",
-          "work_permit": "Work Permit",
-          "family_visa": "Family/Spouse Visa",
-          "business_visa": "Business Visa",
-          "consultation": "Consultation Services",
-          "document_translation": "Document Translation",
-          "other": "Other Services"
-        },
-        "summary": {
-          "service": "Service:",
-          "amount": "Amount:",
-          "total": "Total:",
-          "not_selected": "Not selected"
-        },
-        "security": {
-          "powered_by": "Powered by Moyasar - Saudi's trusted payment gateway",
-          "pci_compliant": "PCI DSS Level 1 compliant",
-          "ssl_encryption": "256-bit SSL encryption",
-          "payment_methods": "Supports all major payment methods"
-        },
-        "contact": {
-          "support_available": "Our support team is available 24/7 to assist you with your payment."
-        },
-        "payment_methods": {
-          "visa": "Visa",
-          "mastercard": "Mastercard",
-          "mada": "Mada",
-          "apple_pay": "Apple Pay",
-          "stc_pay": "STCPay",
-          "bank_transfer": "Bank Transfer",
-          "secure_processing": "All payment methods are processed securely through Moyasar"
-        },
-        "buttons": {
-          "submit": "Proceed to Moyasar Payment",
-          "processing": "Preparing Payment..."
-        },
-        "errors": {
-          "payment_error": "Payment Error",
-          "required_fields": "Please fill in all required fields",
-          "invalid_amount": "Please enter a valid amount greater than 0",
-          "invalid_email": "Please enter a valid email address",
-          "payment_failed": "Payment failed:",
-          "connection_error": "Failed to connect to payment service",
-          "unexpected_error": "An unexpected error occurred"
-        },
-        "notices": {
-          "secure_payment": "Secure Payment via Moyasar",
-          "redirect_notice": "After submitting this form, you will be redirected to Moyasar's secure payment gateway to complete your payment with your preferred payment method."
+      "payment_callback": {
+        "success_title": "Payment Successful",
+        "failed_title": "Payment Failed",
+        "pending_title": "Payment Processing",
+        "loading_title": "Checking Payment...",
+        "processing_title": "Processing Payment...",
+        "success_message": "Your payment has been successfully received. We will contact you soon to follow up.",
+        "failed_message": "Payment processing failed. Please try again or contact technical support.",
+        "pending_message": "Your payment is being processed. We will contact you as soon as the payment is confirmed.",
+        "loading_message": "Checking payment status...",
+        "payment_details": "Payment Details",
+        "payment_id": "Transaction ID",
+        "amount": "Amount",
+        "service": "Service",
+        "customer": "Customer",
+        "date": "Date",
+        "download_receipt": "Download Invoice",
+        "return_home": "Return to Home",
+        "whats_next": "What's Next?",
+        "try_again": "Try Again",
+        "contact_support": "Contact Support",
+        "continue_home": "Return to Home",
+        "support_message": "If you have any questions, don't hesitate to contact us",
+        "next_steps": {
+          "email_confirmation": "You will receive a confirmation email",
+          "team_contact": "Our team will contact you within 24 hours"
         }
       },
       "home": {
@@ -1322,367 +1266,6 @@ const resources = {
           secondary_btn: "Book Consultation"
         }
       },
-      uk: {
-        hero: {
-          title: "Immigrate to United Kingdom",
-          subtitle: "Discover opportunities in Great Britain with its rich heritage and outstanding education",
-          cta: "Explore Opportunities"
-        },
-        why_choose: {
-          title: "Why Choose the United Kingdom?",
-          subtitle: "The United Kingdom offers exceptional opportunities for skilled professionals with its rich heritage in education and innovation.",
-          benefits: [
-            "World-class education with prestigious universities",
-            "Strong and resilient economy",
-            "Rich cultural heritage and history",
-            "Outstanding career opportunities",
-            "Comprehensive healthcare system (NHS)",
-            "Path to British citizenship"
-          ]
-        },
-        programs: {
-          title: "UK Visa Programs",
-          subtitle: "Find the right visa for your UK goals",
-          skilled: {
-            name: "Skilled Worker Visa",
-            description: "Visa for skilled professionals with a job offer in the UK",
-            requirements: [
-              "Job offer from licensed sponsor",
-              "Required skill level",
-              "Minimum salary £25,600",
-              "English language proficiency",
-              "Visa fees and healthcare surcharge"
-            ],
-            processing: "3-8 weeks"
-          },
-          study: {
-            name: "Student Visa",
-            description: "Visa to study at a licensed educational institution in the UK",
-            requirements: [
-              "Acceptance letter from licensed institution",
-              "Proof of financial capacity",
-              "English language competency",
-              "Additional health insurance",
-              "TB test if required"
-            ],
-            processing: "3-6 weeks"
-          },
-          visit: {
-            name: "Standard Visitor Visa",
-            description: "Short-term visa for tourism and business",
-            requirements: [
-              "Valid passport",
-              "Proof of financial support",
-              "Clear travel plan",
-              "Strong ties to home country",
-              "Travel insurance"
-            ],
-            processing: "3-6 weeks"
-          },
-          family: {
-            name: "Family Visa",
-            description: "Visa for spouse/partner and family members",
-            requirements: [
-              "Genuine relationship with British citizen/resident",
-              "Financial income requirement",
-              "English language proficiency",
-              "Criminal record checks",
-              "TB medical test"
-            ],
-            processing: "8-24 weeks"
-          }
-        },
-        process: {
-          title: "Our Process",
-          subtitle: "Professional guide to UK immigration",
-          steps: [
-            {
-              title: "Eligibility Assessment",
-              description: "Comprehensive evaluation of your qualifications and options"
-            },
-            {
-              title: "Application Preparation",
-              description: "Preparation of all required documents and forms"
-            },
-            {
-              title: "Visa Submission",
-              description: "Submit visa application and follow up"
-            },
-            {
-              title: "Post-arrival Support",
-              description: "Assistance with relocation and settlement"
-            }
-          ]
-        },
-        cta: {
-          title: "Ready to Start Your British Journey?",
-          subtitle: "Our certified immigration consultants are here to guide you through every step of the process.",
-          primary_btn: "Free Assessment",
-          secondary_btn: "Book Consultation"
-        }
-      },
-      usa: {
-        hero: {
-          title: "Move to United States",
-          subtitle: "Achieve the American Dream through investment, education, and family immigration programs",
-          cta: "Start Your Journey"
-        },
-        why_choose: {
-          title: "Why Choose the USA?",
-          subtitle: "The United States offers unparalleled opportunities for business, education, and personal growth in the world's most dynamic economy.",
-          benefits: [
-            "World's largest economy with vast opportunities",
-            "Leading universities and research institutions",
-            "Diverse cultural landscape and experiences",
-            "Innovation hub for technology and business",
-            "Strong legal system and property rights",
-            "Path to American citizenship"
-          ]
-        },
-        investment: {
-          title: "Investment Immigration Options",
-          subtitle: "Secure your US residency through strategic investment",
-          options: [
-            {
-              type: "EB-5 Regional Center",
-              amount: "$800,000",
-              description: "Investment in targeted employment areas through approved regional centers",
-              jobs: "Creates 10 indirect jobs"
-            },
-            {
-              type: "EB-5 Direct Investment",
-              amount: "$1,050,000",
-              description: "Direct investment in new commercial enterprise",
-              jobs: "Creates 10 direct jobs"
-            },
-            {
-              type: "E2 Investment",
-              amount: "$100,000+",
-              description: "Substantial investment in US business (non-immigrant)",
-              jobs: "Proportional to investment"
-            }
-          ]
-        },
-        cities: {
-          title: "Major US Cities",
-          subtitle: "Explore the best American cities for business and living",
-          new_york: {
-            name: "New York City",
-            description: "Global financial and cultural capital"
-          },
-          san_francisco: {
-            name: "San Francisco",
-            description: "Technology and innovation hub"
-          },
-          miami: {
-            name: "Miami",
-            description: "Gateway to Latin America and business center"
-          }
-        },
-        programs: {
-          title: "US Immigration Programs",
-          subtitle: "Choose the right pathway to the United States",
-          e2: {
-            name: "E2 Treaty Investor Visa",
-            description: "Investor visa for nationals of treaty countries",
-            requirements: [
-              "Substantial investment in US business",
-              "Treaty country nationality",
-              "Control of investment funds",
-              "Intent to depart when status ends"
-            ],
-            processing: "2-4 months"
-          },
-          eb5: {
-            name: "EB-5 Immigrant Investor Program",
-            description: "Permanent residence through investment",
-            requirements: [
-              "$800K-$1.05M investment",
-              "Investment in approved project",
-              "Job creation requirement",
-              "Source of funds documentation"
-            ],
-            processing: "18-33 months"
-          },
-          student: {
-            name: "Student Visa (F-1)",
-            description: "Academic study visa for universities and colleges",
-            requirements: [
-              "I-20 form from SEVP school",
-              "SEVIS fee payment",
-              "Financial support proof",
-              "Academic qualifications"
-            ],
-            processing: "3-8 weeks"
-          },
-          visit: {
-            name: "Visit Visa (B1/B2)",
-            description: "Business and tourism visitor visa",
-            requirements: [
-              "Valid passport",
-              "Purpose of visit",
-              "Financial evidence",
-              "Ties to home country"
-            ],
-            processing: "2-6 weeks"
-          }
-        },
-        process: {
-          title: "Our Process",
-          subtitle: "Professional guidance for your US immigration journey",
-          steps: [
-            {
-              title: "Initial Assessment",
-              description: "Evaluate your options and eligibility for US programs"
-            },
-            {
-              title: "Investment Planning",
-              description: "Structure your investment and business plan"
-            },
-            {
-              title: "Application Submission",
-              description: "Prepare and submit complete visa application"
-            },
-            {
-              title: "Settlement Support",
-              description: "Assistance with relocation and integration"
-            }
-          ]
-        },
-        cta: {
-          title: "Ready to Pursue the American Dream?",
-          subtitle: "Our experienced US immigration attorneys and consultants are here to guide you through every step.",
-          primary_btn: "Free Consultation",
-          secondary_btn: "Investment Calculator"
-        }
-      },
-      europe: {
-        hero: {
-          title: "Move to Germany & Europe",
-          subtitle: "Discover opportunities in the heart of Europe with strong economy and excellent quality of life",
-          cta: "Explore Opportunities"
-        },
-        why_choose: {
-          title: "Why Choose Germany?",
-          subtitle: "Germany offers exceptional opportunities for skilled professionals with its robust economy, excellent education system, and high standard of living.",
-          benefits: [
-            "Strong economy and job market",
-            "High quality education system",
-            "Excellent healthcare and social benefits",
-            "Central location in Europe",
-            "Rich cultural heritage and lifestyle",
-            "Path to EU citizenship"
-          ]
-        },
-        sectors: {
-          title: "In-Demand Job Sectors",
-          subtitle: "High-demand professions in the German job market",
-          jobs: [
-            { name: "Information Technology", demand: "Very High Demand", icon: "💻" },
-            { name: "Engineering", demand: "High Demand", icon: "⚙️" },
-            { name: "Healthcare", demand: "Very High Demand", icon: "🏥" },
-            { name: "Finance", demand: "High Demand", icon: "💰" },
-            { name: "Manufacturing", demand: "High Demand", icon: "🏭" },
-            { name: "Research & Development", demand: "High Demand", icon: "🔬" }
-          ]
-        },
-        cities: {
-          title: "Major German Cities",
-          subtitle: "Explore the best cities for living and working in Germany",
-          berlin: {
-            name: "Berlin",
-            description: "Capital city with thriving startup ecosystem"
-          },
-          munich: {
-            name: "Munich",
-            description: "Economic powerhouse and technology hub"
-          },
-          frankfurt: {
-            name: "Frankfurt",
-            description: "Financial center of Germany and Europe"
-          }
-        },
-        programs: {
-          title: "Germany Visa Programs",
-          subtitle: "Find the right German visa for your goals",
-          job_seeker: {
-            name: "Germany Job Seeker Visa",
-            description: "Visa to search for employment in Germany",
-            requirements: [
-              "University degree or vocational qualification",
-              "Proof of financial support (€5,000+)",
-              "Health insurance",
-              "German language skills (A1-B2)",
-              "Accommodation proof"
-            ],
-            processing: "2-4 weeks"
-          },
-          study: {
-            name: "Germany Study Visa",
-            description: "Student visa for higher education in Germany",
-            requirements: [
-              "University admission letter",
-              "Financial proof (€11,208/year)",
-              "Academic qualifications",
-              "German/English proficiency",
-              "Health insurance"
-            ],
-            processing: "4-8 weeks"
-          },
-          visit: {
-            name: "Germany Visit Visa",
-            description: "Schengen visa for tourism and business",
-            requirements: [
-              "Valid passport",
-              "Travel insurance",
-              "Financial proof",
-              "Accommodation booking",
-              "Return flight tickets"
-            ],
-            processing: "1-3 weeks"
-          },
-          spouse: {
-            name: "Germany Spouse Visa",
-            description: "Family reunification visa for spouses",
-            requirements: [
-              "Marriage certificate",
-              "Sponsor financial proof",
-              "German language certificate (A1)",
-              "Accommodation proof",
-              "Health insurance"
-            ],
-            processing: "4-12 weeks"
-          }
-        },
-        process: {
-          title: "Our Process",
-          subtitle: "Expert guidance for your German immigration journey",
-          steps: [
-            {
-              title: "Qualification Assessment",
-              description: "Evaluate your qualifications and language skills"
-            },
-            {
-              title: "Document Preparation",
-              description: "Prepare and authenticate all required documents"
-            },
-            {
-              title: "Visa Application",
-              description: "Submit complete application to German consulate"
-            },
-            {
-              title: "Pre-departure Support",
-              description: "Assistance with travel and settlement preparation"
-            }
-          ]
-        },
-        cta: {
-          title: "Ready for Your European Adventure?",
-          subtitle: "Start your journey to Germany and Europe with our expert immigration consultants.",
-          primary_btn: "Free Assessment",
-          secondary_btn: "Book Consultation"
-        }
-      },
       common: {
         key_requirements: "Key Requirements:",
         learn_more: "Learn More",
@@ -1833,6 +1416,34 @@ const resources = {
         "notices": {
           "secure_payment": "دفع آمن عبر مُيسر",
           "redirect_notice": "بعد إرسال هذا النموذج، سيتم توجيهك إلى بوابة الدفع الآمنة لمُيسر لإكمال دفعتك بطريقة الدفع المفضلة لديك."
+        }
+      },
+      "payment_callback": {
+        "success_title": "تم الدفع بنجاح",
+        "failed_title": "فشل في الدفع",
+        "pending_title": "الدفع قيد المعالجة",
+        "loading_title": "جاري التحقق من الدفع...",
+        "processing_title": "جاري معالجة الدفع...",
+        "success_message": "تم استلام دفعتك بنجاح. سنتواصل معك قريباً للمتابعة.",
+        "failed_message": "فشل في معالجة الدفع. يرجى المحاولة مرة أخرى أو التواصل مع الدعم الفني.",
+        "pending_message": "دفعتك قيد المعالجة. سنتواصل معك بمجرد تأكيد الدفع.",
+        "loading_message": "جاري التحقق من حالة الدفع...",
+        "payment_details": "تفاصيل الدفع",
+        "payment_id": "رقم المعاملة",
+        "amount": "المبلغ",
+        "service": "الخدمة",
+        "customer": "العميل",
+        "date": "التاريخ",
+        "download_receipt": "تحميل الفاتورة",
+        "return_home": "العودة للرئيسية",
+        "whats_next": "ما التالي؟",
+        "try_again": "حاول مرة أخرى",
+        "contact_support": "تواصل مع الدعم",
+        "continue_home": "العودة للرئيسية",
+        "support_message": "إذا كان لديك أي استفسارات، لا تتردد في التواصل معنا",
+        "next_steps": {
+          "email_confirmation": "ستتلقى رسالة تأكيد عبر البريد الإلكتروني",
+          "team_contact": "سيتواصل معك فريق العمل خلال 24 ساعة"
         }
       },
       "home": {
@@ -2170,105 +1781,6 @@ const resources = {
         },
         cta: {
           title: "مستعد لبدء رحلتك الأسترالية؟",
-          subtitle: "مستشارونا المعتمدون للهجرة هنا لإرشادك خلال كل خطوة من العملية.",
-          primary_btn: "تقييم مجاني",
-          secondary_btn: "حجز استشارة"
-        }
-      },
-      uk: {
-        hero: {
-          title: "الهجرة إلى المملكة المتحدة",
-          subtitle: "اكتشف الفرص في بريطانيا العظمى مع تاريخها العريق وتعليمها المتميز",
-          cta: "استكشف الفرص"
-        },
-        why_choose: {
-          title: "لماذا تختار المملكة المتحدة؟",
-          subtitle: "تقدم المملكة المتحدة فرصاً استثنائية للمهنيين المهرة مع تاريخها العريق في التعليم والابتكار.",
-          benefits: [
-            "تعليم عالمي المستوى مع جامعات مرموقة",
-            "اقتصاد قوي ومرن",
-            "تراث ثقافي غني وتاريخ عريق",
-            "فرص وظيفية متميزة",
-            "نظام رعاية صحية شامل (NHS)",
-            "طريق للحصول على الجنسية البريطانية"
-          ]
-        },
-        programs: {
-          title: "برامج التأشيرات البريطانية",
-          subtitle: "اعثر على التأشيرة المناسبة لأهدافك في المملكة المتحدة",
-          skilled: {
-            name: "تأشيرة العامل الماهر",
-            description: "تأشيرة للمهنيين المهرة الذين لديهم عرض عمل في المملكة المتحدة",
-            requirements: [
-              "عرض عمل من راعٍ مرخص",
-              "مستوى مهارة مطلوب",
-              "راتب أدنى £25,600",
-              "إتقان اللغة الإنجليزية",
-              "رسوم التأشيرة ومساهمة الرعاية الصحية"
-            ],
-            processing: "3-8 أسابيع"
-          },
-          study: {
-            name: "تأشيرة الطالب",
-            description: "تأشيرة للدراسة في مؤسسة تعليمية مرخصة في المملكة المتحدة",
-            requirements: [
-              "خطاب قبول من مؤسسة مرخصة",
-              "إثبات القدرة المالية",
-              "كفاءة اللغة الإنجليزية",
-              "تأمين صحي إضافي",
-              "فحص السل إذا لزم الأمر"
-            ],
-            processing: "3-6 أسابيع"
-          },
-          visit: {
-            name: "تأشيرة الزيارة القياسية",
-            description: "تأشيرة قصيرة المدى للسياحة والأعمال",
-            requirements: [
-              "جواز سفر صالح",
-              "إثبات الدعم المالي",
-              "خطة سفر واضحة",
-              "روابط قوية مع بلد الإقامة",
-              "تأمين سفر"
-            ],
-            processing: "3-6 أسابيع"
-          },
-          family: {
-            name: "تأشيرة الأسرة",
-            description: "تأشيرة للزوج/الشريك وأفراد العائلة",
-            requirements: [
-              "علاقة حقيقية مع مواطن بريطاني/مقيم",
-              "متطلب الدخل المالي",
-              "إتقان اللغة الإنجليزية",
-              "فحوصات السجل الجنائي",
-              "فحص طبي للسل"
-            ],
-            processing: "8-24 أسبوع"
-          }
-        },
-        process: {
-          title: "عمليتنا",
-          subtitle: "دليلك المهني للهجرة إلى المملكة المتحدة",
-          steps: [
-            {
-              title: "تقييم الأهلية",
-              description: "تقييم شامل لمؤهلاتك وخياراتك"
-            },
-            {
-              title: "تحضير الطلب",
-              description: "إعداد جميع المستندات والنماذج المطلوبة"
-            },
-            {
-              title: "تقديم التأشيرة",
-              description: "تقديم طلب التأشيرة والمتابعة"
-            },
-            {
-              title: "دعم ما بعد الوصول",
-              description: "مساعدة في الانتقال والاستقرار"
-            }
-          ]
-        },
-        cta: {
-          title: "مستعد لبدء رحلتك البريطانية؟",
           subtitle: "مستشارونا المعتمدون للهجرة هنا لإرشادك خلال كل خطوة من العملية.",
           primary_btn: "تقييم مجاني",
           secondary_btn: "حجز استشارة"
