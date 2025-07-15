@@ -71,54 +71,136 @@ const Payment = () => {
           return;
         }
         
-        // PRODUCTION: Use Moyasar Checkout URL (correct way)
+        // PRODUCTION: Use Moyasar Form (correct client-side approach)
         try {
-          console.log('🚀 Creating Moyasar checkout URL...');
+          console.log('🚀 Creating Moyasar form...');
           
-          // Create checkout URL with proper parameters
-          const baseUrl = 'https://checkout.moyasar.com';
-          const params = new URLSearchParams({
-            publishable_api_key: paymentConfig.publishableKey,
-            amount: (amount * 100).toString(),
-            currency: 'SAR',
-            description: `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
-            callback_url: `${window.location.origin}/payment/callback`,
+          // Create form for Moyasar
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = 'https://api.moyasar.com/v1/payments';
+          form.target = '_self';
+          
+          // Payment data
+          const formData_ = {
+            'publishable_api_key': paymentConfig.publishableKey,
+            'amount': (amount * 100).toString(),
+            'currency': 'SAR',
+            'description': `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
+            'callback_url': `${window.location.origin}/payment/callback`,
+            'source[type]': 'form',
+            'source[name]': formData.name,
+            'source[number]': '', // Will be filled by user
+            'source[month]': '',   // Will be filled by user
+            'source[year]': '',    // Will be filled by user
+            'source[cvc]': '',     // Will be filled by user
             'metadata[customer_name]': formData.name,
             'metadata[customer_email]': formData.email,
             'metadata[customer_phone]': formData.phone,
             'metadata[service_type]': formData.serviceType,
+          };
+          
+          // Add hidden inputs
+          Object.entries(formData_).forEach(([key, value]) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = value;
+            form.appendChild(input);
           });
           
-          const checkoutUrl = `${baseUrl}?${params.toString()}`;
-          
-          console.log('✅ Redirecting to Moyasar checkout:', checkoutUrl);
-          
-          // Show loading message
-          setPaymentError(null);
-          
-          // Add loading indicator
-          const loadingDiv = document.createElement('div');
-          loadingDiv.innerHTML = `
-            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-                        background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-                        z-index: 9999; text-align: center; font-family: Arial, sans-serif;">
-              <div style="display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; 
-                          border-top: 3px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-              <p style="margin: 10px 0 0 0; color: #333;">جاري التوجيه إلى صفحة الدفع...</p>
-            </div>
-            <style>
-              @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-              }
-            </style>
+          // Create visible form for credit card
+          const container = document.createElement('div');
+          container.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            font-family: Arial, sans-serif;
           `;
-          document.body.appendChild(loadingDiv);
           
-          // Redirect to Moyasar checkout
-          setTimeout(() => {
-            window.location.href = checkoutUrl;
-          }, 1000);
+          const modal = document.createElement('div');
+          modal.style.cssText = `
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+          `;
+          
+          modal.innerHTML = `
+            <div style="text-align: center; margin-bottom: 20px;">
+              <h2 style="color: #333; margin: 0 0 10px 0;">إدخال بيانات البطاقة</h2>
+              <p style="color: #666; margin: 0;">المبلغ: ${amount} ريال سعودي</p>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+              <label style="display: block; margin-bottom: 5px; color: #333;">رقم البطاقة *</label>
+              <input type="text" name="source[number]" placeholder="1234 5678 9012 3456" 
+                     style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;" 
+                     maxlength="19" required>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+              <div style="flex: 1;">
+                <label style="display: block; margin-bottom: 5px; color: #333;">الشهر *</label>
+                <input type="text" name="source[month]" placeholder="12" 
+                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;" 
+                       maxlength="2" required>
+              </div>
+              <div style="flex: 1;">
+                <label style="display: block; margin-bottom: 5px; color: #333;">السنة *</label>
+                <input type="text" name="source[year]" placeholder="2025" 
+                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;" 
+                       maxlength="4" required>
+              </div>
+              <div style="flex: 1;">
+                <label style="display: block; margin-bottom: 5px; color: #333;">CVV *</label>
+                <input type="text" name="source[cvc]" placeholder="123" 
+                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;" 
+                       maxlength="3" required>
+              </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+              <button type="button" id="cancelPayment" 
+                      style="flex: 1; padding: 12px; background: #ccc; color: #333; border: none; border-radius: 5px; cursor: pointer;">
+                إلغاء
+              </button>
+              <button type="submit" 
+                      style="flex: 2; padding: 12px; background: #007cba; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                دفع ${amount} ريال
+              </button>
+            </div>
+          `;
+          
+          container.appendChild(modal);
+          form.appendChild(container);
+          document.body.appendChild(form);
+          
+          // Format card number input
+          const cardInput = form.querySelector('input[name="source[number]"]') as HTMLInputElement;
+          cardInput?.addEventListener('input', (e) => {
+            const target = e.target as HTMLInputElement;
+            const value = target.value.replace(/\D/g, '');
+            const formatted = value.replace(/(\d{4})/g, '$1 ').trim();
+            target.value = formatted;
+          });
+          
+          // Cancel button
+          form.querySelector('#cancelPayment')?.addEventListener('click', () => {
+            document.body.removeChild(form);
+            setIsProcessing(false);
+          });
+          
+          console.log('✅ Payment form created');
           
         } catch (error) {
           console.error('❌ Payment creation failed:', error);
