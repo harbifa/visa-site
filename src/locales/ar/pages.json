@@ -68,7 +68,24 @@
     "subtitle": "أكمل دفعتك بأمان",
     "description": "ادفع باستخدام نظام الدفع الآمن عبر الإنترنت المدعوم من ميسر",
     "demo_title": "عرض توضيحي للدفع",
-    "demo_description": "اختبر نظام الدفع لدينا ببيانات تجريبية"
+    "demo_description": "اختبر نظام الدفع لدينا ببيانات تجريبية",
+    "form": {
+      "card_number": "رقم البطاقة *",
+      "month": "الشهر *",
+      "year": "السنة *",
+      "cvv": "CVV *",
+      "cardholder_name": "اسم حامل البطاقة *",
+      "secure_message": "معلومات الدفع الخاصة بك محمية ومشفرة",
+      "pay_button": "دفع",
+      "cancel_button": "إلغاء الدفع",
+      "modal_title": "دفع آمن - ميسر",
+      "amount_label": "المبلغ:",
+      "service_label": "الخدمة:",
+      "fill_required": "يرجى ملء جميع الحقول المطلوبة",
+      "payment_failed": "فشل في معالجة الدفع:",
+      "unknown_error": "خطأ غير معروف",
+      "payment_error": "حدث خطأ في معالجة الدفع. يرجى المحاولة مرة أخرى."
+    }
   },
   "payment_callback": {
     "success_message": "تم الدفع بنجاح!",

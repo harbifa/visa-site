@@ -124,7 +124,7 @@ const Payment = () => {
                   
                   element.innerHTML = \`
                     <div style="margin-bottom: 20px;">
-                      <label style="display: block; margin-bottom: 5px; font-weight: bold;">رقم البطاقة *</label>
+                      <label style="display: block; margin-bottom: 5px; font-weight: bold;">${t('payment.form.card_number')}</label>
                       <input type="text" id="card-number" placeholder="1234 5678 9012 3456" 
                              style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
                              maxlength="19" required>
@@ -132,19 +132,19 @@ const Payment = () => {
                     
                     <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                       <div style="flex: 1;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">الشهر *</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">${t('payment.form.month')}</label>
                         <input type="text" id="card-month" placeholder="12" 
                                style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
                                maxlength="2" required>
                       </div>
                       <div style="flex: 1;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">السنة *</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">${t('payment.form.year')}</label>
                         <input type="text" id="card-year" placeholder="2025" 
                                style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
                                maxlength="4" required>
                       </div>
                       <div style="flex: 1;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">CVV *</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">${t('payment.form.cvv')}</label>
                         <input type="text" id="card-cvc" placeholder="123" 
                                style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
                                maxlength="3" required>
@@ -152,7 +152,7 @@ const Payment = () => {
                     </div>
                     
                     <div style="margin-bottom: 20px;">
-                      <label style="display: block; margin-bottom: 5px; font-weight: bold;">اسم حامل البطاقة *</label>
+                      <label style="display: block; margin-bottom: 5px; font-weight: bold;">${t('payment.form.cardholder_name')}</label>
                       <input type="text" id="card-name" placeholder="John Doe" 
                              style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
                              required>
@@ -161,13 +161,13 @@ const Payment = () => {
                     <div style="background: #f0f9ff; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
                       <div style="display: flex; align-items: center; color: #0369a1;">
                         <span style="margin-right: 8px;">🔒</span>
-                        <span>معلومات الدفع الخاصة بك محمية ومشفرة</span>
+                        <span>${t('payment.form.secure_message')}</span>
                       </div>
                     </div>
                     
                     <button type="button" onclick="window.submitPayment()" 
                             style="width: 100%; padding: 15px; background: #0369a1; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer;">
-                      دفع \${config.amount / 100} ريال
+                      ${t('payment.form.pay_button')} \${config.amount / 100} ريال
                     </button>
                   \`;
                   
@@ -190,7 +190,7 @@ const Payment = () => {
                     const cardName = element.querySelector('#card-name').value;
                     
                     if (!cardNumber || !cardMonth || !cardYear || !cardCvc || !cardName) {
-                      alert('يرجى ملء جميع الحقول المطلوبة');
+                      alert('${t('payment.form.fill_required')}');
                       return;
                     }
                     
@@ -238,12 +238,12 @@ const Payment = () => {
                         }
           } else {
                         console.error('❌ Payment failed:', result);
-                        alert('فشل في معالجة الدفع: ' + (result.message || 'خطأ غير معروف'));
+                        alert('${t('payment.form.payment_failed')} ' + (result.message || '${t('payment.form.unknown_error')}'));
                       }
                       
                     } catch (error) {
                       console.error('❌ Payment error:', error);
-                      alert('حدث خطأ في معالجة الدفع. يرجى المحاولة مرة أخرى.');
+                      alert('${t('payment.form.payment_error')}');
                     }
                   };
                   
@@ -264,15 +264,15 @@ const Payment = () => {
             <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 10000;">
               <div style="background: white; padding: 30px; border-radius: 10px; max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
                 <div style="text-align: center; margin-bottom: 20px;">
-                  <h2 style="color: #333; margin: 0 0 10px 0;">دفع آمن - ميسر</h2>
-                  <p style="color: #666; margin: 0;">المبلغ: ${amount} ريال سعودي</p>
-                  <p style="color: #666; margin: 5px 0 0 0; font-size: 14px;">الخدمة: ${formData.serviceType}</p>
+                  <h2 style="color: #333; margin: 0 0 10px 0;">${t('payment.form.modal_title')}</h2>
+                  <p style="color: #666; margin: 0;">${t('payment.form.amount_label')} ${amount} ريال سعودي</p>
+                  <p style="color: #666; margin: 5px 0 0 0; font-size: 14px;">${t('payment.form.service_label')} ${formData.serviceType}</p>
                 </div>
                 <div class="mysr-form"></div>
                 <div style="text-align: center; margin-top: 20px;">
                   <button onclick="this.closest('div').remove(); document.querySelector('button[type=submit]').disabled = false;" 
                           style="padding: 12px 24px; background: #ccc; color: #333; border: none; border-radius: 5px; cursor: pointer;">
-                    إلغاء الدفع
+                    ${t('payment.form.cancel_button')}
                   </button>
                 </div>
               </div>

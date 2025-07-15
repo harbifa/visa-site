@@ -68,7 +68,24 @@
     "subtitle": "Complete your payment securely",
     "description": "Make your payment using our secure online payment system powered by Moyasar",
     "demo_title": "Payment Demo",
-    "demo_description": "Test our payment system with demo credentials"
+    "demo_description": "Test our payment system with demo credentials",
+    "form": {
+      "card_number": "Card Number *",
+      "month": "Month *",
+      "year": "Year *",
+      "cvv": "CVV *",
+      "cardholder_name": "Cardholder Name *",
+      "secure_message": "Your payment information is protected and encrypted",
+      "pay_button": "Pay",
+      "cancel_button": "Cancel Payment",
+      "modal_title": "Secure Payment - Moyasar",
+      "amount_label": "Amount:",
+      "service_label": "Service:",
+      "fill_required": "Please fill in all required fields",
+      "payment_failed": "Payment processing failed:",
+      "unknown_error": "Unknown error",
+      "payment_error": "An error occurred while processing payment. Please try again."
+    }
   },
   "payment_callback": {
     "success_message": "Payment completed successfully!",
