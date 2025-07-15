@@ -70,6 +70,37 @@
     "demo_title": "Payment Demo",
     "demo_description": "Test our payment system with demo credentials"
   },
+  "payment_callback": {
+    "success_message": "Payment completed successfully!",
+    "success_title": "Payment Successful!",
+    "failed_title": "Payment Failed",
+    "failed_message": "Payment was unsuccessful. Please try again.",
+    "pending_title": "Payment Pending",
+    "pending_message": "Payment is being processed. You will receive confirmation shortly.",
+    "processing_title": "Processing...",
+    "payment_details": "Payment Details",
+    "payment_id": "Payment ID:",
+    "amount": "Amount:",
+    "service": "Service:",
+    "customer": "Customer:",
+    "date": "Date:",
+    "download_receipt": "Download Receipt",
+    "return_home": "Return to Home",
+    "try_again": "Try Payment Again",
+    "contact_support": "Contact Support",
+    "continue_home": "Continue to Home",
+    "whats_next": "What's Next?",
+    "next_steps": {
+      "email_confirmation": "You will receive a confirmation email shortly",
+      "team_contact": "Our team will contact you within 24 hours to discuss your service",
+      "document_preparation": "Start preparing required documents",
+      "track_application": "Track your application status in your dashboard"
+    },
+    "support_info": {
+      "title": "Need Help?",
+      "description": "Our support team is available to help you"
+    }
+  },
   "countries": {
     "canada": {
       "title": "Canada Immigration Services",

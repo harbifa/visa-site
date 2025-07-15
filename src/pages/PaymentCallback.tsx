@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CheckCircle, XCircle, ArrowLeft, Download, Phone, Mail } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../hooks/useLanguage';
 
 interface PaymentResult {
   status: 'success' | 'failed' | 'pending' | 'loading';
@@ -15,6 +17,8 @@ interface PaymentResult {
 const PaymentCallback = () => {
   const [searchParams] = useSearchParams();
   const [paymentResult, setPaymentResult] = useState<PaymentResult>({ status: 'loading' });
+  const { t } = useTranslation();
+  const { currentLanguage } = useLanguage();
 
   useEffect(() => {
     // Get payment status from URL parameters
@@ -44,7 +48,7 @@ const PaymentCallback = () => {
         paymentId: paymentId || undefined,
         amount: amount ? parseFloat(amount) / 100 : undefined, // Convert from halalas
         currency,
-        message: 'Payment completed successfully!',
+        message: t('payment_callback.success_message'),
         customerName: customerName || undefined,
         serviceType: serviceType || undefined,
       });
@@ -52,7 +56,7 @@ const PaymentCallback = () => {
       setPaymentResult({
         status: 'failed',
         paymentId: paymentId || undefined,
-        message: message || 'Payment was unsuccessful. Please try again.',
+        message: message || t('payment_callback.failed_message'),
         customerName: customerName || undefined,
         serviceType: serviceType || undefined,
       });
@@ -60,14 +64,14 @@ const PaymentCallback = () => {
       setPaymentResult({
         status: 'pending',
         paymentId: paymentId || undefined,
-        message: 'Payment is being processed. You will receive confirmation shortly.',
+        message: t('payment_callback.pending_message'),
         customerName: customerName || undefined,
         serviceType: serviceType || undefined,
       });
     } else {
       setPaymentResult({
         status: 'failed',
-        message: 'Invalid payment status received.',
+        message: t('payment_callback.failed_message'),
       });
     }
   }, [searchParams]);
@@ -88,13 +92,13 @@ const PaymentCallback = () => {
   const getStatusTitle = () => {
     switch (paymentResult.status) {
       case 'success':
-        return 'Payment Successful!';
+        return t('payment_callback.success_title');
       case 'failed':
-        return 'Payment Failed';
+        return t('payment_callback.failed_title');
       case 'pending':
-        return 'Payment Pending';
+        return t('payment_callback.pending_title');
       default:
-        return 'Processing...';
+        return t('payment_callback.processing_title');
     }
   };
 
@@ -125,13 +129,13 @@ const PaymentCallback = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className={`min-h-screen bg-gray-50 py-12 ${currentLanguage === 'ar' ? 'rtl' : ''}`}>
       <div className="max-w-2xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium mb-6">
-            <ArrowLeft size={16} className="mr-2" />
-            Back to Home
+            <ArrowLeft size={16} className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2 rtl:scale-x-[-1]' : ''}`} />
+            {t('payment_callback.return_home')}
           </Link>
         </div>
 
@@ -155,38 +159,38 @@ const PaymentCallback = () => {
           {/* Payment Details */}
           {(paymentResult.paymentId || paymentResult.amount) && (
             <div className="bg-gray-50 rounded-lg p-6 mb-6 text-left">
-              <h3 className="font-semibold text-gray-900 mb-4">Payment Details</h3>
+              <h3 className="font-semibold text-gray-900 mb-4">{t('payment_callback.payment_details')}</h3>
               <div className="space-y-2 text-sm">
                 {paymentResult.paymentId && (
+                                      <div className="flex justify-between">
+                      <span className="text-gray-600">{t('payment_callback.payment_id')}</span>
+                      <span className="font-mono text-gray-900">{paymentResult.paymentId}</span>
+                    </div>
+                  )}
+                  {paymentResult.amount && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">{t('payment_callback.amount')}</span>
+                      <span className="font-semibold text-gray-900">
+                        {paymentResult.amount.toFixed(2)} {paymentResult.currency}
+                      </span>
+                    </div>
+                  )}
+                  {paymentResult.serviceType && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">{t('payment_callback.service')}</span>
+                      <span className="text-gray-900">{paymentResult.serviceType}</span>
+                    </div>
+                  )}
+                  {paymentResult.customerName && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">{t('payment_callback.customer')}</span>
+                      <span className="text-gray-900">{paymentResult.customerName}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Payment ID:</span>
-                    <span className="font-mono text-gray-900">{paymentResult.paymentId}</span>
+                    <span className="text-gray-600">{t('payment_callback.date')}</span>
+                    <span className="text-gray-900">{new Date().toLocaleDateString()}</span>
                   </div>
-                )}
-                {paymentResult.amount && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Amount:</span>
-                    <span className="font-semibold text-gray-900">
-                      {paymentResult.amount.toFixed(2)} {paymentResult.currency}
-                    </span>
-                  </div>
-                )}
-                {paymentResult.serviceType && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Service:</span>
-                    <span className="text-gray-900">{paymentResult.serviceType}</span>
-                  </div>
-                )}
-                {paymentResult.customerName && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Customer:</span>
-                    <span className="text-gray-900">{paymentResult.customerName}</span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Date:</span>
-                  <span className="text-gray-900">{new Date().toLocaleDateString()}</span>
-                </div>
               </div>
             </div>
           )}
@@ -196,14 +200,14 @@ const PaymentCallback = () => {
             {paymentResult.status === 'success' && (
               <>
                 <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center">
-                  <Download size={20} className="mr-2" />
-                  Download Receipt
+                  <Download size={20} className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2' : ''}`} />
+                  {t('payment_callback.download_receipt')}
                 </button>
                 <Link
                   to="/"
                   className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors text-center"
                 >
-                  Return to Home
+                  {t('payment_callback.return_home')}
                 </Link>
               </>
             )}
@@ -214,24 +218,24 @@ const PaymentCallback = () => {
                   to="/payment"
                   className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors text-center"
                 >
-                  Try Payment Again
+                  {t('payment_callback.try_again')}
                 </Link>
                 <Link
                   to="/contact"
                   className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors text-center"
                 >
-                  Contact Support
+                  {t('payment_callback.contact_support')}
                 </Link>
               </>
             )}
 
             {paymentResult.status === 'pending' && (
-              <Link
-                to="/"
-                className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors text-center"
-              >
-                Continue to Home
-              </Link>
+                              <Link
+                  to="/"
+                  className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors text-center"
+                >
+                  {t('payment_callback.continue_home')}
+                </Link>
             )}
           </div>
         </div>
@@ -239,15 +243,15 @@ const PaymentCallback = () => {
         {/* Next Steps */}
         {paymentResult.status === 'success' && (
           <div className="bg-white rounded-xl shadow-lg p-6 mt-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">What's Next?</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('payment_callback.whats_next')}</h3>
             <div className="space-y-3 text-gray-700">
               <div className="flex items-start">
-                <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={20} />
-                <span>You will receive a confirmation email shortly</span>
+                <CheckCircle className={`text-green-500 mr-3 mt-0.5 flex-shrink-0 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-3' : ''}`} size={20} />
+                <span>{t('payment_callback.next_steps.email_confirmation')}</span>
               </div>
               <div className="flex items-start">
-                <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={20} />
-                <span>Our team will contact you within 24 hours to discuss your service</span>
+                <CheckCircle className={`text-green-500 mr-3 mt-0.5 flex-shrink-0 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-3' : ''}`} size={20} />
+                <span>{t('payment_callback.next_steps.team_contact')}</span>
               </div>
               <div className="flex items-start">
                 <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={20} />
@@ -263,7 +267,7 @@ const PaymentCallback = () => {
           <div className="space-y-2 text-sm text-blue-800">
             <div className="flex items-center">
               <Mail className="mr-2" size={16} />
-              <span>info@shawmekimmigration.com</span>
+              <span>info@alshawamekhimmigration.com</span>
             </div>
             <div className="flex items-center">
               <Phone className="mr-2" size={16} />

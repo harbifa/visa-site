@@ -70,6 +70,37 @@
     "demo_title": "عرض توضيحي للدفع",
     "demo_description": "اختبر نظام الدفع لدينا ببيانات تجريبية"
   },
+  "payment_callback": {
+    "success_message": "تم الدفع بنجاح!",
+    "success_title": "تمت الدفعة بنجاح!",
+    "failed_title": "فشل في الدفع",
+    "failed_message": "لم تتم الدفعة بنجاح. يرجى المحاولة مرة أخرى.",
+    "pending_title": "الدفع قيد المعالجة",
+    "pending_message": "يتم معالجة الدفع. ستتلقى تأكيداً قريباً.",
+    "processing_title": "جاري المعالجة...",
+    "payment_details": "تفاصيل الدفع",
+    "payment_id": "رقم الدفع:",
+    "amount": "المبلغ:",
+    "service": "الخدمة:",
+    "customer": "العميل:",
+    "date": "التاريخ:",
+    "download_receipt": "تحميل الإيصال",
+    "return_home": "العودة للرئيسية",
+    "try_again": "حاول مرة أخرى",
+    "contact_support": "اتصل بالدعم",
+    "continue_home": "متابعة إلى الرئيسية",
+    "whats_next": "ما التالي؟",
+    "next_steps": {
+      "email_confirmation": "ستتلقى إيميل تأكيد قريباً",
+      "team_contact": "سيتصل بك فريقنا خلال 24 ساعة لمناقشة خدمتك",
+      "document_preparation": "ابدأ في إعداد الوثائق المطلوبة",
+      "track_application": "تتبع حالة طلبك في لوحة التحكم الخاصة بك"
+    },
+    "support_info": {
+      "title": "تحتاج مساعدة؟",
+      "description": "فريق الدعم متاح لمساعدتك"
+    }
+  },
   "countries": {
     "canada": {
       "title": "خدمات الهجرة الكندية",

@@ -10,6 +10,7 @@ export interface PaymentConfig {
   callbackUrl: string;
   successUrl?: string;
   failureUrl?: string;
+  webhookSecret?: string;
 }
 
 // Default configuration for sandbox environment
@@ -22,28 +23,56 @@ const SANDBOX_CONFIG: PaymentConfig = {
   callbackUrl: `${window.location.origin}/payment/callback`,
   successUrl: `${window.location.origin}/payment/success`,
   failureUrl: `${window.location.origin}/payment/failed`,
+  webhookSecret: import.meta.env.VITE_MOYASAR_WEBHOOK_SECRET || 'sandbox_webhook_secret',
 };
 
-// Production configuration (replace with real keys)
+// Production configuration using environment variables
 const PRODUCTION_CONFIG: PaymentConfig = {
   apiUrl: 'https://api.moyasar.com/v1',
-  publishableKey: 'pk_live_YOUR_LIVE_PUBLISHABLE_KEY', // Replace with live key
-  secretKey: 'sk_live_YOUR_LIVE_SECRET_KEY', // Replace with live key
+  publishableKey: import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY || 'pk_live_YOUR_LIVE_PUBLISHABLE_KEY',
+  secretKey: import.meta.env.VITE_MOYASAR_SECRET_KEY || 'sk_live_YOUR_LIVE_SECRET_KEY',
   currency: 'SAR',
   environment: 'production',
   callbackUrl: `${window.location.origin}/payment/callback`,
   successUrl: `${window.location.origin}/payment/success`,
   failureUrl: `${window.location.origin}/payment/failed`,
+  webhookSecret: import.meta.env.VITE_MOYASAR_WEBHOOK_SECRET || 'production_webhook_secret',
 };
 
 // Determine environment from process.env or default to sandbox
 const getEnvironment = (): 'sandbox' | 'production' => {
   // Check environment variable
   const env = import.meta.env.VITE_PAYMENT_ENV;
+  
+  // Force sandbox if no valid production keys are available
   if (env === 'production') {
+    const hasValidKeys = import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY?.startsWith('pk_live_') &&
+                        import.meta.env.VITE_MOYASAR_SECRET_KEY?.startsWith('sk_live_');
+    
+    if (!hasValidKeys) {
+      console.warn('⚠️ Production environment requested but no valid live keys found. Falling back to sandbox.');
+      return 'sandbox';
+    }
+    
     return 'production';
   }
   return 'sandbox';
+};
+
+// Validate production configuration
+const validateProductionConfig = (config: PaymentConfig): boolean => {
+  if (config.environment === 'production') {
+    // Check if live keys are properly configured
+    if (config.publishableKey === 'pk_live_YOUR_LIVE_PUBLISHABLE_KEY' || 
+        config.secretKey === 'sk_live_YOUR_LIVE_SECRET_KEY' ||
+        !config.publishableKey.startsWith('pk_live_') ||
+        !config.secretKey.startsWith('sk_live_')) {
+      console.error('❌ PRODUCTION MODE ERROR: Live Moyasar keys are not configured properly!');
+      console.error('Please set VITE_MOYASAR_PUBLISHABLE_KEY and VITE_MOYASAR_SECRET_KEY in your .env file');
+      return false;
+    }
+  }
+  return true;
 };
 
 // Get current configuration based on environment
@@ -52,7 +81,15 @@ export const getPaymentConfig = (): PaymentConfig => {
   
   if (environment === 'production') {
     console.log('🏭 Using PRODUCTION payment configuration');
-    return PRODUCTION_CONFIG;
+    const config = PRODUCTION_CONFIG;
+    
+    // Validate production configuration
+    if (!validateProductionConfig(config)) {
+      console.warn('⚠️  Falling back to SANDBOX mode due to configuration issues');
+      return SANDBOX_CONFIG;
+    }
+    
+    return config;
   } else {
     console.log('🧪 Using SANDBOX payment configuration');
     return SANDBOX_CONFIG;
@@ -69,6 +106,20 @@ export const isProduction = (): boolean => {
 
 export const isSandbox = (): boolean => {
   return paymentConfig.environment === 'sandbox';
+};
+
+// Production readiness check
+export const isProductionReady = (): boolean => {
+  if (import.meta.env.VITE_PAYMENT_ENV === 'production') {
+    const publishableKey = import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY;
+    const secretKey = import.meta.env.VITE_MOYASAR_SECRET_KEY;
+    
+    return publishableKey && 
+           secretKey && 
+           publishableKey.startsWith('pk_live_') && 
+           secretKey.startsWith('sk_live_');
+  }
+  return false;
 };
 
 // Amount conversion utilities

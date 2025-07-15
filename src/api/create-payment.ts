@@ -2,6 +2,7 @@
 // This handles the server-side communication with Moyasar API
 
 import { PaymentData, createMoyasarPayment, handlePaymentError, PaymentError } from '../utils/moyasar';
+import { isProductionReady, isProduction } from '../config/payment';
 
 export interface PaymentRequest {
   name: string;
@@ -26,6 +27,17 @@ export interface PaymentResponse {
  */
 export const createPayment = async (request: PaymentRequest): Promise<PaymentResponse> => {
   try {
+    // Check if production is properly configured
+    if (isProduction() && !isProductionReady()) {
+      return {
+        success: false,
+        error: {
+          code: 'CONFIGURATION_ERROR',
+          message: 'Production payment is not configured properly. Please check your Moyasar keys.',
+        },
+      };
+    }
+    
     // Validate request data
     if (!request.name || !request.email || !request.phone || !request.amount || !request.serviceType) {
       return {
