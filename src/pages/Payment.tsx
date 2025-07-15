@@ -71,27 +71,50 @@ const Payment = () => {
           return;
         }
         
-        // PRODUCTION: Use Moyasar Checkout URL directly
+        // PRODUCTION: Create payment via Moyasar API
         try {
-          // Create checkout URL directly
-          const baseUrl = 'https://checkout.moyasar.com';
-          const params = new URLSearchParams({
-            publishable_api_key: paymentConfig.publishableKey,
-            amount: (amount * 100).toString(), // Convert to halalas
+          const paymentData = {
+            amount: amount * 100, // Convert to halalas
             currency: 'SAR',
             description: `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
             callback_url: `${window.location.origin}/payment/callback`,
-            'metadata[customer_name]': formData.name,
-            'metadata[customer_email]': formData.email,
-            'metadata[customer_phone]': formData.phone,
-            'metadata[service_type]': formData.serviceType,
+            source: {
+              type: 'creditcard'
+            },
+            metadata: {
+              customer_name: formData.name,
+              customer_email: formData.email,
+              customer_phone: formData.phone,
+              service_type: formData.serviceType,
+            }
+          };
+
+          console.log('🚀 Creating payment with Moyasar API:', paymentData);
+
+          const response = await fetch('https://api.moyasar.com/v1/payments', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Basic ${btoa(paymentConfig.secretKey + ':')}`
+            },
+            body: JSON.stringify(paymentData)
           });
 
-          const checkoutUrl = `${baseUrl}?${params.toString()}`;
-          console.log('✅ Redirecting to Moyasar checkout:', checkoutUrl);
-          
-          // Redirect to Moyasar checkout
-          window.location.href = checkoutUrl;
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error('❌ Moyasar API Error:', errorData);
+            throw new Error(`Payment creation failed: ${errorData.message || response.statusText}`);
+          }
+
+          const payment = await response.json();
+          console.log('✅ Payment created successfully:', payment);
+
+          if (payment.source && payment.source.transaction_url) {
+            console.log('🔗 Redirecting to transaction URL:', payment.source.transaction_url);
+            window.location.href = payment.source.transaction_url;
+          } else {
+            throw new Error('No transaction URL received from Moyasar');
+          }
         } catch (error) {
           console.error('❌ Payment creation failed:', error);
           setPaymentError(t('payment.errors.connection_error'));
