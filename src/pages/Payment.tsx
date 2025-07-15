@@ -42,6 +42,25 @@ const Payment = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
+  // Translation strings - moved outside to avoid context issues
+  const translations = {
+    modalTitle: t('payment.form.modal_title'),
+    amountLabel: t('payment.form.amount_label'),
+    serviceLabel: t('payment.form.service_label'),
+    cancelButton: t('payment.form.cancel_button'),
+    cardNumber: t('payment.form.card_number'),
+    month: t('payment.form.month'),
+    year: t('payment.form.year'),
+    cvv: t('payment.form.cvv'),
+    cardholderName: t('payment.form.cardholder_name'),
+    secureMessage: t('payment.form.secure_message'),
+    payButton: t('payment.form.pay_button'),
+    fillRequired: t('payment.form.fill_required'),
+    paymentFailed: t('payment.form.payment_failed'),
+    unknownError: t('payment.form.unknown_error'),
+    paymentError: t('payment.form.payment_error')
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
@@ -122,17 +141,9 @@ const Payment = () => {
                     return;
                   }
                   
-                  const cardNumberLabel = t('payment.form.card_number');
-                  const monthLabel = t('payment.form.month');
-                  const yearLabel = t('payment.form.year');
-                  const cvvLabel = t('payment.form.cvv');
-                  const cardholderNameLabel = t('payment.form.cardholder_name');
-                  const secureMessage = t('payment.form.secure_message');
-                  const payButton = t('payment.form.pay_button');
-                  
                   element.innerHTML = \`
                     <div style="margin-bottom: 20px;">
-                      <label style="display: block; margin-bottom: 5px; font-weight: bold;">\${cardNumberLabel}</label>
+                      <label style="display: block; margin-bottom: 5px; font-weight: bold;">\${translations.cardNumber}</label>
                       <input type="text" id="card-number" placeholder="1234 5678 9012 3456" 
                              style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
                              maxlength="19" required>
@@ -140,19 +151,19 @@ const Payment = () => {
                     
                     <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                       <div style="flex: 1;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">\${monthLabel}</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">\${translations.month}</label>
                         <input type="text" id="card-month" placeholder="12" 
                                style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
                                maxlength="2" required>
                       </div>
                       <div style="flex: 1;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">\${yearLabel}</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">\${translations.year}</label>
                         <input type="text" id="card-year" placeholder="2025" 
                                style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
                                maxlength="4" required>
                       </div>
                       <div style="flex: 1;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">\${cvvLabel}</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">\${translations.cvv}</label>
                         <input type="text" id="card-cvc" placeholder="123" 
                                style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
                                maxlength="3" required>
@@ -160,7 +171,7 @@ const Payment = () => {
                     </div>
                     
                     <div style="margin-bottom: 20px;">
-                      <label style="display: block; margin-bottom: 5px; font-weight: bold;">\${cardholderNameLabel}</label>
+                      <label style="display: block; margin-bottom: 5px; font-weight: bold;">\${translations.cardholderName}</label>
                       <input type="text" id="card-name" placeholder="John Doe" 
                              style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;"
                              required>
@@ -169,13 +180,13 @@ const Payment = () => {
                     <div style="background: #f0f9ff; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
                       <div style="display: flex; align-items: center; color: #0369a1;">
                         <span style="margin-right: 8px;">🔒</span>
-                        <span>\${secureMessage}</span>
+                        <span>\${translations.secureMessage}</span>
                       </div>
                     </div>
                     
                     <button type="button" onclick="window.submitPayment()" 
                             style="width: 100%; padding: 15px; background: #0369a1; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer;">
-                      \${payButton} \${config.amount / 100} ريال
+                      \${translations.payButton} \${config.amount / 100} ريال
                     </button>
                   \`;
                   
@@ -198,7 +209,7 @@ const Payment = () => {
                     const cardName = element.querySelector('#card-name').value;
                     
                     if (!cardNumber || !cardMonth || !cardYear || !cardCvc || !cardName) {
-                      alert(t('payment.form.fill_required'));
+                      alert(translations.fillRequired);
                       return;
                     }
                     
@@ -246,12 +257,12 @@ const Payment = () => {
                         }
           } else {
                         console.error('❌ Payment failed:', result);
-                        alert(t('payment.form.payment_failed') + ' ' + (result.message || t('payment.form.unknown_error')));
+                        alert(translations.paymentFailed + ' ' + (result.message || translations.unknownError));
                       }
                       
                     } catch (error) {
                       console.error('❌ Payment error:', error);
-                      alert(t('payment.form.payment_error'));
+                      alert(translations.paymentError);
                     }
                   };
                   
@@ -268,24 +279,20 @@ const Payment = () => {
           
           // Create payment modal
           const modal = document.createElement('div');
-          const modalTitle = t('payment.form.modal_title');
-          const amountLabel = t('payment.form.amount_label');
-          const serviceLabel = t('payment.form.service_label');
-          const cancelButton = t('payment.form.cancel_button');
           
           modal.innerHTML = `
             <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 10000;">
               <div style="background: white; padding: 30px; border-radius: 10px; max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
                 <div style="text-align: center; margin-bottom: 20px;">
-                  <h2 style="color: #333; margin: 0 0 10px 0;">${modalTitle}</h2>
-                  <p style="color: #666; margin: 0;">${amountLabel} ${amount} ريال سعودي</p>
-                  <p style="color: #666; margin: 5px 0 0 0; font-size: 14px;">${serviceLabel} ${formData.serviceType}</p>
+                  <h2 style="color: #333; margin: 0 0 10px 0;">${translations.modalTitle}</h2>
+                  <p style="color: #666; margin: 0;">${translations.amountLabel} ${amount} ريال سعودي</p>
+                  <p style="color: #666; margin: 5px 0 0 0; font-size: 14px;">${translations.serviceLabel} ${formData.serviceType}</p>
                 </div>
                 <div class="mysr-form"></div>
                 <div style="text-align: center; margin-top: 20px;">
                   <button onclick="this.closest('div').remove(); document.querySelector('button[type=submit]').disabled = false;" 
                           style="padding: 12px 24px; background: #ccc; color: #333; border: none; border-radius: 5px; cursor: pointer;">
-                    ${cancelButton}
+                    ${translations.cancelButton}
                   </button>
                 </div>
               </div>
