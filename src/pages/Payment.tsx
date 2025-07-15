@@ -71,29 +71,24 @@ const Payment = () => {
           return;
         }
         
-        // PRODUCTION: Use Moyasar Form (correct client-side approach)
+        // PRODUCTION: Redirect to Moyasar Checkout
         try {
-          console.log('🚀 Creating Moyasar form...');
+          console.log('🚀 Redirecting to Moyasar Checkout...');
           
-          // Create form for Moyasar
+          // Create form for Moyasar checkout
           const form = document.createElement('form');
           form.method = 'POST';
-          form.action = 'https://api.moyasar.com/v1/payments';
+          form.action = 'https://checkout.moyasar.com/pay';
           form.target = '_self';
           
           // Payment data
-          const formData_ = {
+          const paymentData = {
             'publishable_api_key': paymentConfig.publishableKey,
             'amount': (amount * 100).toString(),
             'currency': 'SAR',
             'description': `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
             'callback_url': `${window.location.origin}/payment/callback`,
-            'source[type]': 'form',
-            'source[name]': formData.name,
-            'source[number]': '', // Will be filled by user
-            'source[month]': '',   // Will be filled by user
-            'source[year]': '',    // Will be filled by user
-            'source[cvc]': '',     // Will be filled by user
+            'source[type]': 'creditcard',
             'metadata[customer_name]': formData.name,
             'metadata[customer_email]': formData.email,
             'metadata[customer_phone]': formData.phone,
@@ -101,7 +96,7 @@ const Payment = () => {
           };
           
           // Add hidden inputs
-          Object.entries(formData_).forEach(([key, value]) => {
+          Object.entries(paymentData).forEach(([key, value]) => {
             const input = document.createElement('input');
             input.type = 'hidden';
             input.name = key;
@@ -109,101 +104,14 @@ const Payment = () => {
             form.appendChild(input);
           });
           
-          // Create visible form for credit card
-          const container = document.createElement('div');
-          container.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            font-family: Arial, sans-serif;
-          `;
-          
-          const modal = document.createElement('div');
-          modal.style.cssText = `
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-          `;
-          
-          modal.innerHTML = `
-            <div style="text-align: center; margin-bottom: 20px;">
-              <h2 style="color: #333; margin: 0 0 10px 0;">إدخال بيانات البطاقة</h2>
-              <p style="color: #666; margin: 0;">المبلغ: ${amount} ريال سعودي</p>
-            </div>
-            
-            <div style="margin-bottom: 15px;">
-              <label style="display: block; margin-bottom: 5px; color: #333;">رقم البطاقة *</label>
-              <input type="text" name="source[number]" placeholder="1234 5678 9012 3456" 
-                     style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;" 
-                     maxlength="19" required>
-            </div>
-            
-            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-              <div style="flex: 1;">
-                <label style="display: block; margin-bottom: 5px; color: #333;">الشهر *</label>
-                <input type="text" name="source[month]" placeholder="12" 
-                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;" 
-                       maxlength="2" required>
-              </div>
-              <div style="flex: 1;">
-                <label style="display: block; margin-bottom: 5px; color: #333;">السنة *</label>
-                <input type="text" name="source[year]" placeholder="2025" 
-                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;" 
-                       maxlength="4" required>
-              </div>
-              <div style="flex: 1;">
-                <label style="display: block; margin-bottom: 5px; color: #333;">CVV *</label>
-                <input type="text" name="source[cvc]" placeholder="123" 
-                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;" 
-                       maxlength="3" required>
-              </div>
-            </div>
-            
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-              <button type="button" id="cancelPayment" 
-                      style="flex: 1; padding: 12px; background: #ccc; color: #333; border: none; border-radius: 5px; cursor: pointer;">
-                إلغاء
-              </button>
-              <button type="submit" 
-                      style="flex: 2; padding: 12px; background: #007cba; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                دفع ${amount} ريال
-              </button>
-            </div>
-          `;
-          
-          container.appendChild(modal);
-          form.appendChild(container);
+          // Add form to body and submit
           document.body.appendChild(form);
+          form.submit();
           
-          // Format card number input
-          const cardInput = form.querySelector('input[name="source[number]"]') as HTMLInputElement;
-          cardInput?.addEventListener('input', (e) => {
-            const target = e.target as HTMLInputElement;
-            const value = target.value.replace(/\D/g, '');
-            const formatted = value.replace(/(\d{4})/g, '$1 ').trim();
-            target.value = formatted;
-          });
-          
-          // Cancel button
-          form.querySelector('#cancelPayment')?.addEventListener('click', () => {
-            document.body.removeChild(form);
-            setIsProcessing(false);
-          });
-          
-          console.log('✅ Payment form created');
+          console.log('✅ Redirecting to Moyasar Checkout...');
           
         } catch (error) {
-          console.error('❌ Payment creation failed:', error);
+          console.error('❌ Payment redirection failed:', error);
           setPaymentError(t('payment.errors.connection_error'));
         }
       } else {
