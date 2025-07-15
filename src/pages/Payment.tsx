@@ -71,41 +71,27 @@ const Payment = () => {
           return;
         }
         
-        // PRODUCTION: Use Moyasar Checkout (secure for client-side)
+        // PRODUCTION: Use Moyasar Checkout URL (correct way)
         try {
           console.log('🚀 Creating Moyasar checkout URL...');
           
-          // Create form data to submit to Moyasar
-          const form = document.createElement('form');
-          form.method = 'POST';
-          form.action = 'https://api.moyasar.com/v1/payments';
-          form.style.display = 'none';
-          
-          // Add form fields
-          const fields = {
-            'publishable_api_key': paymentConfig.publishableKey,
-            'amount': (amount * 100).toString(),
-            'currency': 'SAR',
-            'description': `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
-            'callback_url': `${window.location.origin}/payment/callback`,
-            'source[type]': 'creditcard',
+          // Create checkout URL with proper parameters
+          const baseUrl = 'https://checkout.moyasar.com';
+          const params = new URLSearchParams({
+            publishable_api_key: paymentConfig.publishableKey,
+            amount: (amount * 100).toString(),
+            currency: 'SAR',
+            description: `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
+            callback_url: `${window.location.origin}/payment/callback`,
             'metadata[customer_name]': formData.name,
             'metadata[customer_email]': formData.email,
             'metadata[customer_phone]': formData.phone,
             'metadata[service_type]': formData.serviceType,
-          };
-          
-          // Add fields to form
-          Object.entries(fields).forEach(([key, value]) => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = key;
-            input.value = value;
-            form.appendChild(input);
           });
           
-          document.body.appendChild(form);
-          console.log('✅ Submitting payment form to Moyasar...');
+          const checkoutUrl = `${baseUrl}?${params.toString()}`;
+          
+          console.log('✅ Redirecting to Moyasar checkout:', checkoutUrl);
           
           // Show loading message
           setPaymentError(null);
@@ -129,10 +115,10 @@ const Payment = () => {
           `;
           document.body.appendChild(loadingDiv);
           
-          // Submit form - this will redirect to Moyasar
+          // Redirect to Moyasar checkout
           setTimeout(() => {
-            form.submit();
-          }, 100);
+            window.location.href = checkoutUrl;
+          }, 1000);
           
         } catch (error) {
           console.error('❌ Payment creation failed:', error);
