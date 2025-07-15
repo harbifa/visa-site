@@ -169,9 +169,6 @@ const PaymentCallback = () => {
 
       // Generate and download PDF
       await generatePaymentReceipt(receiptData);
-      
-      // Show success message
-      alert('Receipt downloaded successfully!');
     } catch (error) {
       console.error('Error generating receipt:', error);
       alert('Error downloading receipt. Please try again or contact support.');
