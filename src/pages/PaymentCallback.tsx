@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { CheckCircle, XCircle, ArrowLeft, Download, Phone, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../hooks/useLanguage';
+import { generatePaymentReceipt } from '../utils/pdfReceipt';
 
 
 interface PaymentResult {
@@ -139,10 +140,44 @@ const PaymentCallback = () => {
   };
 
   const downloadReceipt = async () => {
-    // PDF feature temporarily disabled
-    alert(currentLanguage === 'ar' ? 
-      'ميزة تحميل الإيصال متوقفة مؤقتاً. سيتم إصلاحها قريباً.' : 
-      'Receipt download feature is temporarily disabled. Will be fixed soon.');
+    if (paymentResult.status !== 'success' || !paymentResult.paymentId) {
+      alert(currentLanguage === 'ar' ? 
+        'لا يمكن تحميل الإيصال. معلومات الدفع غير مكتملة.' : 
+        'Cannot download receipt. Payment information is incomplete.');
+      return;
+    }
+
+    try {
+      // Format the date
+      const currentDate = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+
+      // Prepare receipt data
+      const receiptData = {
+        paymentId: paymentResult.paymentId,
+        customerName: paymentResult.customerName || 'Valued Customer',
+        serviceType: paymentResult.serviceType || 'Immigration Services',
+        amount: paymentResult.amount || 0,
+        currency: paymentResult.currency || 'SAR',
+        date: currentDate
+      };
+
+      // Generate and download PDF
+      generatePaymentReceipt(receiptData);
+      
+      // Show success message
+      alert(currentLanguage === 'ar' ? 
+        'تم تحميل الإيصال بنجاح!' : 
+        'Receipt downloaded successfully!');
+    } catch (error) {
+      console.error('Error generating receipt:', error);
+      alert(currentLanguage === 'ar' ? 
+        'حدث خطأ أثناء تحميل الإيصال. يرجى المحاولة مرة أخرى.' : 
+        'Error downloading receipt. Please try again.');
+    }
   };
 
   return (
