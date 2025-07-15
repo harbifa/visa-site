@@ -42,6 +42,36 @@
     "student_visa": "Student Visa",
     "visit_visa": "Visit Visa"
   },
+  "payment_callback": {
+    "success_title": "Payment Successful",
+    "failed_title": "Payment Failed",
+    "pending_title": "Payment Pending",
+    "loading_title": "Checking Payment Status...",
+    "processing_title": "Processing Payment...",
+    "success_message": "Your payment has been received successfully. We will contact you soon to proceed.",
+    "failed_message": "Payment processing failed. Please try again or contact technical support.",
+    "pending_message": "Your payment is being processed. We will contact you once payment is confirmed.",
+    "loading_message": "Checking payment status...",
+    "payment_details": "Payment Details",
+    "payment_id": "Transaction ID",
+    "amount": "Amount",
+    "date": "Date",
+    "download_receipt": "Download Receipt",
+    "return_home": "Return to Home",
+    "whats_next": "What's Next?",
+    "next_steps": "Follow-up steps for your request:",
+    "step1": "You will receive a confirmation email",
+    "step2": "Our team will contact you within 24 hours",
+    "step3": "We will begin reviewing your request and preparing required documents",
+    "support_message": "If you have any questions, don't hesitate to contact us",
+    "try_again": "Try Again",
+    "contact_support": "Contact Support",
+    "continue_home": "Return to Home",
+    "next_steps": {
+      "email_confirmation": "You will receive a confirmation email",
+      "team_contact": "Our team will contact you within 24 hours"
+    }
+  },
   "footer": {
     "useful_links": "Useful Links",
     "countries_visas": "Countries Visas",

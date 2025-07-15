@@ -128,6 +128,51 @@ const PaymentCallback = () => {
     }
   };
 
+  const downloadReceipt = () => {
+    if (!paymentResult.paymentId) return;
+    
+    // Create receipt content
+    const receiptContent = `
+الشوامخ للهجرة والتأشيرات
+Shawamek Visa Immigration
+
+إيصال دفع / Payment Receipt
+===========================================
+
+رقم المعاملة / Transaction ID: ${paymentResult.paymentId}
+المبلغ / Amount: ${paymentResult.amount} ${paymentResult.currency}
+التاريخ / Date: ${new Date().toLocaleString()}
+الحالة / Status: ${paymentResult.status === 'success' ? 'مدفوع / Paid' : 'غير مدفوع / Not Paid'}
+
+${paymentResult.customerName ? `اسم العميل / Customer: ${paymentResult.customerName}` : ''}
+${paymentResult.serviceType ? `نوع الخدمة / Service: ${paymentResult.serviceType}` : ''}
+
+===========================================
+
+شكراً لك لاختيار الشوامخ للهجرة والتأشيرات
+Thank you for choosing Shawamek Visa Immigration
+
+للاستفسارات / For inquiries:
+الهاتف / Phone: +966501367513
+البريد الإلكتروني / Email: info@alshawamekhimmigration.com
+
+===========================================
+تم إنشاء هذا الإيصال في: ${new Date().toLocaleString()}
+This receipt was generated on: ${new Date().toLocaleString()}
+    `;
+    
+    // Create and download file
+    const blob = new Blob([receiptContent], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `receipt_${paymentResult.paymentId}_${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className={`min-h-screen bg-gray-50 py-12 ${currentLanguage === 'ar' ? 'rtl' : ''}`}>
       <div className="max-w-2xl mx-auto px-4">
@@ -199,7 +244,10 @@ const PaymentCallback = () => {
           <div className="space-y-4">
             {paymentResult.status === 'success' && (
               <>
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center">
+                <button 
+                  onClick={downloadReceipt}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
+                >
                   <Download size={20} className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2' : ''}`} />
                   {t('payment_callback.download_receipt')}
                 </button>
