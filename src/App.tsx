@@ -27,6 +27,8 @@ import RefundPolicy from './pages/RefundPolicy';
 
 function App() {
   // Initialize language system
+  console.log("المفتاح:", import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY);
+
   useLanguage();
 
   return (
@@ -61,7 +63,10 @@ function App() {
         <Footer />
       </div>
     </Router>
+    
   );
+
+
 }
 
 export default App;
