@@ -71,50 +71,69 @@ const Payment = () => {
           return;
         }
         
-        // PRODUCTION: Create payment via Moyasar API
+        // PRODUCTION: Use Moyasar Checkout (secure for client-side)
         try {
-          const paymentData = {
-            amount: amount * 100, // Convert to halalas
-            currency: 'SAR',
-            description: `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
-            callback_url: `${window.location.origin}/payment/callback`,
-            source: {
-              type: 'creditcard'
-            },
-            metadata: {
-              customer_name: formData.name,
-              customer_email: formData.email,
-              customer_phone: formData.phone,
-              service_type: formData.serviceType,
-            }
+          console.log('🚀 Creating Moyasar checkout URL...');
+          
+          // Create form data to submit to Moyasar
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = 'https://api.moyasar.com/v1/payments';
+          form.style.display = 'none';
+          
+          // Add form fields
+          const fields = {
+            'publishable_api_key': paymentConfig.publishableKey,
+            'amount': (amount * 100).toString(),
+            'currency': 'SAR',
+            'description': `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
+            'callback_url': `${window.location.origin}/payment/callback`,
+            'source[type]': 'creditcard',
+            'metadata[customer_name]': formData.name,
+            'metadata[customer_email]': formData.email,
+            'metadata[customer_phone]': formData.phone,
+            'metadata[service_type]': formData.serviceType,
           };
-
-          console.log('🚀 Creating payment with Moyasar API:', paymentData);
-
-          const response = await fetch('https://api.moyasar.com/v1/payments', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Basic ${btoa(paymentConfig.secretKey + ':')}`
-            },
-            body: JSON.stringify(paymentData)
+          
+          // Add fields to form
+          Object.entries(fields).forEach(([key, value]) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = value;
+            form.appendChild(input);
           });
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            console.error('❌ Moyasar API Error:', errorData);
-            throw new Error(`Payment creation failed: ${errorData.message || response.statusText}`);
-          }
-
-          const payment = await response.json();
-          console.log('✅ Payment created successfully:', payment);
-
-          if (payment.source && payment.source.transaction_url) {
-            console.log('🔗 Redirecting to transaction URL:', payment.source.transaction_url);
-            window.location.href = payment.source.transaction_url;
-          } else {
-            throw new Error('No transaction URL received from Moyasar');
-          }
+          
+          document.body.appendChild(form);
+          console.log('✅ Submitting payment form to Moyasar...');
+          
+          // Show loading message
+          setPaymentError(null);
+          
+          // Add loading indicator
+          const loadingDiv = document.createElement('div');
+          loadingDiv.innerHTML = `
+            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                        background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+                        z-index: 9999; text-align: center; font-family: Arial, sans-serif;">
+              <div style="display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; 
+                          border-top: 3px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+              <p style="margin: 10px 0 0 0; color: #333;">جاري التوجيه إلى صفحة الدفع...</p>
+            </div>
+            <style>
+              @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+              }
+            </style>
+          `;
+          document.body.appendChild(loadingDiv);
+          
+          // Submit form - this will redirect to Moyasar
+          setTimeout(() => {
+            form.submit();
+          }, 100);
+          
         } catch (error) {
           console.error('❌ Payment creation failed:', error);
           setPaymentError(t('payment.errors.connection_error'));
