@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { CreditCard, Lock, ArrowLeft, CheckCircle, ExternalLink, Shield, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../hooks/useLanguage';
+import { isProductionReady, paymentConfig } from '../config/payment';
 
 const Payment = () => {
   const { t } = useTranslation();
@@ -56,32 +57,41 @@ const Payment = () => {
       // Check if we're in production mode
       const isProduction = import.meta.env.VITE_PAYMENT_ENV === 'production';
       
+      console.log('🔧 Payment Environment Check:', {
+        env: import.meta.env.VITE_PAYMENT_ENV,
+        isProduction,
+        hasPublishableKey: !!import.meta.env.VITE_MOYASAR_PUBLISHABLE_KEY,
+        hasSecretKey: !!import.meta.env.VITE_MOYASAR_SECRET_KEY,
+      });
+      
       if (isProduction) {
-        // PRODUCTION: Use real Moyasar API
+        // Check if production is properly configured
+        if (!isProductionReady()) {
+          setPaymentError('⚠️ Production payment is not configured properly. Please check your Moyasar keys in environment variables.');
+          return;
+        }
+        
+        // PRODUCTION: Use Moyasar Checkout URL directly
         try {
-          const response = await fetch('/api/create-payment', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: formData.name,
-              email: formData.email,
-              phone: formData.phone,
-              amount: formData.amount,
-              serviceType: formData.serviceType,
-              description: formData.description,
-            }),
+          // Create checkout URL directly
+          const baseUrl = 'https://checkout.moyasar.com';
+          const params = new URLSearchParams({
+            publishable_api_key: paymentConfig.publishableKey,
+            amount: (amount * 100).toString(), // Convert to halalas
+            currency: 'SAR',
+            description: `${formData.serviceType}${formData.description ? ` - ${formData.description}` : ''}`,
+            callback_url: `${window.location.origin}/payment/callback`,
+            'metadata[customer_name]': formData.name,
+            'metadata[customer_email]': formData.email,
+            'metadata[customer_phone]': formData.phone,
+            'metadata[service_type]': formData.serviceType,
           });
 
-          const result = await response.json();
+          const checkoutUrl = `${baseUrl}?${params.toString()}`;
+          console.log('✅ Redirecting to Moyasar checkout:', checkoutUrl);
           
-          if (result.success && result.url) {
-            console.log('✅ Payment URL received, redirecting...', result.url);
-            window.location.href = result.url;
-          } else {
-            setPaymentError(result.error?.message || t('payment.errors.connection_error'));
-          }
+          // Redirect to Moyasar checkout
+          window.location.href = checkoutUrl;
         } catch (error) {
           console.error('❌ Payment creation failed:', error);
           setPaymentError(t('payment.errors.connection_error'));
@@ -435,7 +445,7 @@ const Payment = () => {
             <div className="bg-blue-50 rounded-xl p-6">
               <h3 className="text-lg font-semibold text-blue-900 mb-4">{t('payment.need_help')}</h3>
               <div className="space-y-2 text-sm text-blue-800">
-                <p>📧 info@shawmekimmigration.com</p>
+                <p>📧 info@alshawamekhimmigration.com</p>
                 <p>📞 +966501367513</p>
                 <p className="pt-2 text-xs text-blue-600">
                   {t('payment.contact.support_available')}
