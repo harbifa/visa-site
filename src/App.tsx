@@ -53,6 +53,7 @@ function App() {
             <Route path="/payment" element={<Payment />} />
             <Route path="/payment/demo" element={<PaymentDemo />} />
             <Route path="/payment/callback" element={<PaymentCallback />} />
+            <Route path="/payment-callback" element={<PaymentCallback />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/disclaimer" element={<Disclaimer />} />

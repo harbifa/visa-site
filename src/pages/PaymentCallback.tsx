@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { CheckCircle, XCircle, ArrowLeft, Download, Phone, Mail } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { useLanguage } from '../hooks/useLanguage';
+import { CheckCircle, XCircle, ArrowLeft, Download, Phone, Mail, AlertCircle } from 'lucide-react';
 import { generatePaymentReceipt } from '../utils/pdfReceipt';
-
 
 interface PaymentResult {
   status: 'success' | 'failed' | 'pending' | 'loading';
@@ -13,14 +10,13 @@ interface PaymentResult {
   currency?: string;
   customerName?: string;
   serviceType?: string;
+  customerEmail?: string;
+  customerPhone?: string;
 }
 
 const PaymentCallback = () => {
   const [searchParams] = useSearchParams();
   const [paymentResult, setPaymentResult] = useState<PaymentResult>({ status: 'loading' });
-
-  const { t } = useTranslation();
-  const { currentLanguage } = useLanguage();
 
   useEffect(() => {
     // Get payment status from URL parameters
@@ -31,8 +27,10 @@ const PaymentCallback = () => {
     const currency = searchParams.get('currency') || 'SAR';
 
     // Get customer info from metadata if available
-    const customerName = searchParams.get('metadata[customer_name]');
-    const serviceType = searchParams.get('metadata[service_type]');
+    const customerName = searchParams.get('metadata[customer_name]') || searchParams.get('customer_name');
+    const serviceType = searchParams.get('metadata[service_type]') || searchParams.get('service_type');
+    const customerEmail = searchParams.get('metadata[customer_email]') || searchParams.get('customer_email');
+    const customerPhone = searchParams.get('metadata[customer_phone]') || searchParams.get('customer_phone');
 
     console.log('🔄 Payment callback received:', {
       status,
@@ -41,6 +39,8 @@ const PaymentCallback = () => {
       message,
       customerName,
       serviceType,
+      customerEmail,
+      customerPhone,
     });
 
     // Determine payment result based on status
@@ -52,6 +52,8 @@ const PaymentCallback = () => {
         currency,
         customerName: customerName || undefined,
         serviceType: serviceType || undefined,
+        customerEmail: customerEmail || undefined,
+        customerPhone: customerPhone || undefined,
       });
     } else if (status === 'failed') {
       setPaymentResult({
@@ -81,7 +83,7 @@ const PaymentCallback = () => {
       case 'failed':
         return <XCircle className="text-red-600" size={64} />;
       case 'pending':
-        return <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"></div>;
+        return <AlertCircle className="text-yellow-600" size={64} />;
       default:
         return <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-gray-400"></div>;
     }
@@ -90,26 +92,26 @@ const PaymentCallback = () => {
   const getStatusTitle = () => {
     switch (paymentResult.status) {
       case 'success':
-        return t('payment_callback.success_title');
+        return 'Payment Successful!';
       case 'failed':
-        return t('payment_callback.failed_title');
+        return 'Payment Failed';
       case 'pending':
-        return t('payment_callback.pending_title');
+        return 'Payment Pending';
       default:
-        return t('payment_callback.processing_title');
+        return 'Processing...';
     }
   };
 
   const getStatusMessage = () => {
     switch (paymentResult.status) {
       case 'success':
-        return t('payment_callback.success_message');
+        return 'Your payment has been processed successfully. You will receive a confirmation email shortly.';
       case 'failed':
-        return t('payment_callback.failed_message');
+        return 'Payment was unsuccessful. Please try again or contact our support team for assistance.';
       case 'pending':
-        return t('payment_callback.pending_message');
+        return 'Your payment is being processed. You will receive confirmation once the payment is complete.';
       default:
-        return t('payment_callback.loading_message');
+        return 'Please wait while we process your payment...';
     }
   };
 
@@ -120,7 +122,7 @@ const PaymentCallback = () => {
       case 'failed':
         return 'text-red-600';
       case 'pending':
-        return 'text-blue-600';
+        return 'text-yellow-600';
       default:
         return 'text-gray-600';
     }
@@ -133,7 +135,7 @@ const PaymentCallback = () => {
       case 'failed':
         return 'bg-red-50 border-red-200';
       case 'pending':
-        return 'bg-blue-50 border-blue-200';
+        return 'bg-yellow-50 border-yellow-200';
       default:
         return 'bg-gray-50 border-gray-200';
     }
@@ -141,9 +143,7 @@ const PaymentCallback = () => {
 
   const downloadReceipt = async () => {
     if (paymentResult.status !== 'success' || !paymentResult.paymentId) {
-      alert(currentLanguage === 'ar' ? 
-        'لا يمكن تحميل الإيصال. معلومات الدفع غير مكتملة.' : 
-        'Cannot download receipt. Payment information is incomplete.');
+      alert('Cannot download receipt. Payment information is incomplete.');
       return;
     }
 
@@ -162,37 +162,35 @@ const PaymentCallback = () => {
         serviceType: paymentResult.serviceType || 'Immigration Services',
         amount: paymentResult.amount || 0,
         currency: paymentResult.currency || 'SAR',
-        date: currentDate
+        date: currentDate,
+        customerEmail: paymentResult.customerEmail || '',
+        customerPhone: paymentResult.customerPhone || ''
       };
 
       // Generate and download PDF
       await generatePaymentReceipt(receiptData);
       
       // Show success message
-      alert(currentLanguage === 'ar' ? 
-        'تم تحميل الإيصال بنجاح!' : 
-        'Receipt downloaded successfully!');
+      alert('Receipt downloaded successfully!');
     } catch (error) {
       console.error('Error generating receipt:', error);
-      alert(currentLanguage === 'ar' ? 
-        'حدث خطأ أثناء تحميل الإيصال. يرجى المحاولة مرة أخرى.' : 
-        'Error downloading receipt. Please try again.');
+      alert('Error downloading receipt. Please try again or contact support.');
     }
   };
 
   return (
-    <div className={`min-h-screen bg-gray-50 py-12 ${currentLanguage === 'ar' ? 'rtl' : ''}`}>
-      <div className="max-w-2xl mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+      <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium mb-6">
-            <ArrowLeft size={16} className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2 rtl:scale-x-[-1]' : ''}`} />
-            {t('payment_callback.return_home')}
+          <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium mb-6 transition-colors">
+            <ArrowLeft size={16} className="mr-2" />
+            Back to Home
           </Link>
         </div>
 
         {/* Payment Result Card */}
-        <div className={`bg-white rounded-xl shadow-lg border-2 ${getBackgroundColor()} p-8 text-center`}>
+        <div className={`bg-white rounded-2xl shadow-xl border-2 ${getBackgroundColor()} p-8 text-center`}>
           {/* Status Icon */}
           <div className="flex justify-center mb-6">
             {getStatusIcon()}
@@ -211,38 +209,38 @@ const PaymentCallback = () => {
           {/* Payment Details */}
           {(paymentResult.paymentId || paymentResult.amount) && (
             <div className="bg-gray-50 rounded-lg p-6 mb-6 text-left">
-              <h3 className="font-semibold text-gray-900 mb-4">{t('payment_callback.payment_details')}</h3>
-              <div className="space-y-2 text-sm">
+              <h3 className="font-semibold text-gray-900 mb-4">Payment Details</h3>
+              <div className="space-y-3 text-sm">
                 {paymentResult.paymentId && (
-                                      <div className="flex justify-between">
-                      <span className="text-gray-600">{t('payment_callback.payment_id')}</span>
-                      <span className="font-mono text-gray-900">{paymentResult.paymentId}</span>
-                    </div>
-                  )}
-                  {paymentResult.amount && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">{t('payment_callback.amount')}</span>
-                      <span className="font-semibold text-gray-900">
-                        {paymentResult.amount.toFixed(2)} {paymentResult.currency}
-                      </span>
-                    </div>
-                  )}
-                  {paymentResult.serviceType && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">{t('payment_callback.service')}</span>
-                      <span className="text-gray-900">{paymentResult.serviceType}</span>
-                    </div>
-                  )}
-                  {paymentResult.customerName && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">{t('payment_callback.customer')}</span>
-                      <span className="text-gray-900">{paymentResult.customerName}</span>
-                    </div>
-                  )}
                   <div className="flex justify-between">
-                    <span className="text-gray-600">{t('payment_callback.date')}</span>
-                    <span className="text-gray-900">{new Date().toLocaleDateString()}</span>
+                    <span className="text-gray-600">Payment ID:</span>
+                    <span className="font-mono text-gray-900">{paymentResult.paymentId}</span>
                   </div>
+                )}
+                {paymentResult.amount && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Amount:</span>
+                    <span className="font-semibold text-gray-900">
+                      {paymentResult.amount.toFixed(2)} {paymentResult.currency}
+                    </span>
+                  </div>
+                )}
+                {paymentResult.serviceType && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Service:</span>
+                    <span className="text-gray-900">{paymentResult.serviceType}</span>
+                  </div>
+                )}
+                {paymentResult.customerName && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Customer:</span>
+                    <span className="text-gray-900">{paymentResult.customerName}</span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Date:</span>
+                  <span className="text-gray-900">{new Date().toLocaleDateString()}</span>
+                </div>
               </div>
             </div>
           )}
@@ -253,16 +251,16 @@ const PaymentCallback = () => {
               <>
                 <button 
                   onClick={downloadReceipt}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl"
                 >
-                  <Download size={20} className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2' : ''}`} />
-                  {t('payment_callback.download_receipt')}
+                  <Download size={20} className="mr-2" />
+                  Download Receipt
                 </button>
                 <Link
                   to="/"
                   className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors text-center"
                 >
-                  {t('payment_callback.return_home')}
+                  Return to Home
                 </Link>
               </>
             )}
@@ -271,65 +269,69 @@ const PaymentCallback = () => {
               <>
                 <Link
                   to="/payment"
-                  className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors text-center"
+                  className="block w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 text-center shadow-lg hover:shadow-xl"
                 >
-                  {t('payment_callback.try_again')}
+                  Try Payment Again
                 </Link>
                 <Link
                   to="/contact"
                   className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors text-center"
                 >
-                  {t('payment_callback.contact_support')}
+                  Contact Support
                 </Link>
               </>
             )}
 
             {paymentResult.status === 'pending' && (
-                              <Link
-                  to="/"
-                  className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors text-center"
-                >
-                  {t('payment_callback.continue_home')}
-                </Link>
+              <Link
+                to="/"
+                className="block w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 text-center shadow-lg hover:shadow-xl"
+              >
+                Continue to Home
+              </Link>
             )}
           </div>
         </div>
 
         {/* Next Steps */}
         {paymentResult.status === 'success' && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mt-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('payment_callback.whats_next')}</h3>
+          <div className="bg-white rounded-2xl shadow-xl p-6 mt-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">What's Next?</h3>
             <div className="space-y-3 text-gray-700">
               <div className="flex items-start">
-                <CheckCircle className={`text-green-500 mr-3 mt-0.5 flex-shrink-0 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-3' : ''}`} size={20} />
-                <span>{t('payment_callback.next_steps.email_confirmation')}</span>
+                <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={20} />
+                <span>You will receive a confirmation email shortly with payment details</span>
               </div>
               <div className="flex items-start">
-                <CheckCircle className={`text-green-500 mr-3 mt-0.5 flex-shrink-0 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-3' : ''}`} size={20} />
-                <span>{t('payment_callback.next_steps.team_contact')}</span>
+                <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={20} />
+                <span>Our team will contact you within 24 hours to discuss your service</span>
               </div>
               <div className="flex items-start">
-                <CheckCircle className={`text-green-500 mr-3 mt-0.5 flex-shrink-0 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-3' : ''}`} size={20} />
-                <span>{t('payment_callback.next_steps.email_confirmation')}</span>
+                <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={20} />
+                <span>Start preparing required documents for your immigration process</span>
+              </div>
+              <div className="flex items-start">
+                <CheckCircle className="text-green-500 mr-3 mt-0.5 flex-shrink-0" size={20} />
+                <span>Track your application status through our support team</span>
               </div>
             </div>
           </div>
         )}
 
         {/* Support Contact */}
-        <div className="bg-blue-50 rounded-xl p-6 mt-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-4">{currentLanguage === 'ar' ? 'هل تحتاج مساعدة؟' : 'Need Help?'}</h3>
-          <div className="space-y-2 text-sm text-blue-800">
+        <div className="bg-blue-50 rounded-2xl border-2 border-blue-200 p-6 mt-6">
+          <h3 className="text-lg font-semibold text-blue-900 mb-4">Need Help?</h3>
+          <div className="space-y-3 text-sm text-blue-800">
             <div className="flex items-center">
-              <Mail className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2' : ''}`} size={16} />
-              <span>info@shawmekimmigration.com</span>
+              <Mail className="mr-2" size={16} />
+              <span>info@alshawamekhimmigration.com</span>
             </div>
             <div className="flex items-center">
-              <Phone className={`mr-2 ${currentLanguage === 'ar' ? 'rtl:mr-0 rtl:ml-2' : ''}`} size={16} />
+              <Phone className="mr-2" size={16} />
               <span>+966501367513</span>
             </div>
             <p className="pt-2 text-xs text-blue-600">
-              {t('payment_callback.support_message')}
+              Our support team is available 24/7 to assist you with any questions or concerns.
             </p>
           </div>
         </div>
