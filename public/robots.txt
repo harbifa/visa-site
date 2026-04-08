@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+
+# Important pages for indexing
+Allow: /about
+Allow: /contact
+Allow: /canada
+Allow: /australia
+Allow: /uk
+Allow: /usa
+Allow: /europe
+Allow: /payment
+
+# Legal pages (lower priority)
+Allow: /privacy-policy
+Allow: /terms-of-service
+Allow: /disclaimer
+Allow: /cookie-policy
+Allow: /refund-policy
+
+# Disallow admin/demo pages
+Disallow: /payment/demo
+Disallow: /payment/callback
+
+# Sitemap location
+Sitemap: https://shawmekimmigration.com/sitemap.xml
+
+# Crawl delay (be respectful)
+Crawl-delay: 1 

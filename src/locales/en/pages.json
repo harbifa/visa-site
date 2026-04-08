@@ -1,0 +1,164 @@
+{
+  "home": {
+    "title": "Professional Immigration Services",
+    "subtitle": "Your trusted partner for visa and immigration solutions worldwide",
+    "hero_text": "We help you navigate the complex world of immigration with expert guidance and personalized service.",
+    "stats": {
+      "clients": "Happy Clients",
+      "experience": "Years Experience",
+      "success_rate": "Success Rate",
+      "countries": "Countries Served"
+    },
+    "visa_categories": {
+      "title": "Our Visa Categories",
+      "visit_desc": "Tourist and business visit visas for all countries",
+      "immigration_desc": "Permanent residence and citizenship pathways",
+      "work_desc": "Employment-based visas and work authorization",
+      "study_desc": "Student visas for universities worldwide"
+    },
+    "countries_section": {
+      "title": "Countries We Serve",
+      "canada_desc": "Express Entry, Provincial Nomination, Study & Work Permits",
+      "australia_desc": "Skilled Migration, Study Visa, Partner & Family Visas",
+      "uk_desc": "Student Visa, Work Permits, Visit & Business Visas",
+      "europe_desc": "Germany Job Seeker, Study Visa, EU Blue Card"
+    },
+    "assessment_form": {
+      "title": "Free Immigration Assessment",
+      "description": "Get a personalized assessment of your immigration options",
+      "placeholder": {
+        "name": "Your Name",
+        "email": "Your Email",
+        "phone": "Your Phone",
+        "country": "Select Country",
+        "visa_type": "Select Visa Type",
+        "message": "Tell us about your immigration goals"
+      }
+    },
+    "testimonials": {
+      "title": "What Our Clients Say",
+      "subtitle": "Real stories from successful visa applicants"
+    },
+    "news": {
+      "title": "Latest Immigration News",
+      "subtitle": "Stay updated with the latest immigration policies and opportunities"
+    }
+  },
+  "about": {
+    "title": "About Shawamek Visa Immigration",
+    "subtitle": "Your trusted immigration partner since 2016",
+    "description": "We are a team of certified immigration consultants with extensive experience in helping individuals and families achieve their immigration goals.",
+    "mission": "Our Mission",
+    "vision": "Our Vision",
+    "values": "Our Values"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in touch with our immigration experts",
+    "description": "Ready to start your immigration journey? Contact us today for professional guidance and support.",
+    "office_hours": "Office Hours",
+    "location": "Our Location",
+    "contact_form": {
+      "title": "Send us a message",
+      "description": "Fill out the form below and we'll get back to you within 24 hours"
+    }
+  },
+  "payment": {
+    "title": "Secure Online Payment",
+    "subtitle": "Complete your payment securely",
+    "description": "Make your payment using our secure online payment system powered by Moyasar",
+    "demo_title": "Payment Demo",
+    "demo_description": "Test our payment system with demo credentials",
+    "form": {
+      "card_number": "Card Number *",
+      "month": "Month *",
+      "year": "Year *",
+      "cvv": "CVV *",
+      "cardholder_name": "Cardholder Name *",
+      "secure_message": "Your payment information is protected and encrypted",
+      "pay_button": "Pay",
+      "cancel_button": "Cancel Payment",
+      "modal_title": "Secure Payment - Moyasar",
+      "amount_label": "Amount:",
+      "service_label": "Service:",
+      "fill_required": "Please fill in all required fields",
+      "payment_failed": "Payment processing failed:",
+      "unknown_error": "Unknown error",
+      "payment_error": "An error occurred while processing payment. Please try again.",
+      "full_name": "Full Name",
+      "email_address": "Email Address",
+      "phone_number": "Phone Number",
+      "amount": "Amount",
+      "service_type": "Service Type",
+      "additional_details": "Additional Details",
+      "address": "Address",
+      "city": "City",
+      "placeholder_name": "Enter your full name",
+      "placeholder_email": "Enter your email address",
+      "placeholder_phone": "Enter your phone number",
+      "placeholder_amount": "Enter amount in Saudi Riyal",
+      "placeholder_details": "Any additional details about the service required",
+      "placeholder_address": "Enter your address",
+      "placeholder_city": "Enter your city",
+      "select_service": "Select Service Type"
+    }
+  },
+  "payment_callback": {
+    "success_message": "Payment completed successfully!",
+    "success_title": "Payment Successful!",
+    "failed_title": "Payment Failed",
+    "failed_message": "Payment was unsuccessful. Please try again.",
+    "pending_title": "Payment Pending",
+    "pending_message": "Payment is being processed. You will receive confirmation shortly.",
+    "processing_title": "Processing...",
+    "payment_details": "Payment Details",
+    "payment_id": "Payment ID:",
+    "amount": "Amount:",
+    "service": "Service:",
+    "customer": "Customer:",
+    "date": "Date:",
+    "download_receipt": "Download Receipt",
+    "return_home": "Return to Home",
+    "try_again": "Try Payment Again",
+    "contact_support": "Contact Support",
+    "continue_home": "Continue to Home",
+    "whats_next": "What's Next?",
+    "next_steps": {
+      "email_confirmation": "You will receive a confirmation email shortly",
+      "team_contact": "Our team will contact you within 24 hours to discuss your service",
+      "document_preparation": "Start preparing required documents",
+      "track_application": "Track your application status in your dashboard"
+    },
+    "support_info": {
+      "title": "Need Help?",
+      "description": "Our support team is available to help you"
+    }
+  },
+  "countries": {
+    "canada": {
+      "title": "Canada Immigration Services",
+      "subtitle": "Your pathway to Canadian permanent residence",
+      "description": "Canada offers numerous immigration pathways for skilled workers, students, and families."
+    },
+    "australia": {
+      "title": "Australia Immigration Services", 
+      "subtitle": "Skilled migration to Australia",
+      "description": "Australia's skilled migration program offers excellent opportunities for qualified professionals."
+    },
+    "uk": {
+      "title": "UK Immigration Services",
+      "subtitle": "Your gateway to the United Kingdom",
+      "description": "The UK offers various visa categories for students, workers, and visitors."
+    },
+    "europe": {
+      "title": "Europe Immigration Services",
+      "subtitle": "European opportunities await",
+      "description": "Explore immigration opportunities across European countries."
+    },
+    "usa": {
+      "title": "USA Immigration Services",
+      "subtitle": "American dream within reach",
+      "description": "Navigate the US immigration system with expert guidance."
+    }
+  }
+} 
